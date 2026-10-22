@@ -26,6 +26,7 @@ import {
   Smile,
 } from "lucide-react";
 import "./style.css";
+import LoginBonus, { BonusProvider } from "./LoginBonus.jsx";
 import Character from "./Character.jsx";
 import PlanningViews from "./PlanningViews.jsx";
 import { loadPlanner, plannerKey } from "./planner.js";
@@ -1312,6 +1313,7 @@ function App() {
                   <img src={avatars[0]} alt="あなた" />
                   <h2>あなた</h2>
                   <p>わたしのペースで、日々をつづる。</p>
+                  <LoginBonus />
                   <div className="profile-stats">
                     <div>
                       <b>{own.length}</b>note
@@ -1634,4 +1636,8 @@ function App() {
     </div>
   );
 }
-createRoot(document.getElementById("root")).render(<App />);
+createRoot(document.getElementById("root")).render(
+  <BonusProvider>
+    <App />
+  </BonusProvider>,
+);

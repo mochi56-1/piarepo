@@ -1721,5 +1721,257 @@ main {
 .task-done[aria-pressed="true"] svg {
   fill: #c2e2bb;
 }
-.time-inputs input,.schedule-date input{min-width:0}.modal .close{min-width:40px;min-height:40px;display:grid;place-items:center}.feeling-option{min-width:0}
-@media(max-width:360px){.composer-sheet .feeling-option small{font-size:8px}}
+.time-inputs input,
+.schedule-date input {
+  min-width: 0;
+}
+.modal .close {
+  min-width: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+}
+.feeling-option {
+  min-width: 0;
+}
+@media (max-width: 360px) {
+  .composer-sheet .feeling-option small {
+    font-size: 8px;
+  }
+}
+.login-bonus {
+  background: #f9f5df;
+  border: 1px solid #e7dbac;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  margin: 23px 0;
+}
+.bonus-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #92814a;
+}
+.bonus-heading h3 {
+  font-size: 13px !important;
+  font-weight: 600;
+  margin: 0 !important;
+}
+.bonus-demo {
+  font-size: 9px;
+  border: 1px solid #d9c895;
+  padding: 2px 6px;
+  border-radius: 9px;
+  margin-left: auto;
+}
+.bonus-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 13px;
+}
+.bonus-balance {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #b89b43;
+}
+.bonus-balance b {
+  font-size: 25px;
+  font-family: "Nunito Sans", sans-serif;
+  letter-spacing: 0.5px;
+}
+.bonus-balance > span {
+  font-size: 10px;
+  color: #9f936e;
+}
+.bonus-claim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 14px;
+  border-radius: 19px;
+  background: #dfc66f;
+  color: #514823;
+  font-size: 12px;
+  min-height: 42px;
+  white-space: nowrap;
+}
+.bonus-claim:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.bonus-claim.claimed {
+  background: #e3e9d7;
+  color: #738563;
+  opacity: 1;
+}
+.bonus-hint {
+  font-size: 10px !important;
+  color: #a29879 !important;
+  line-height: 1.8;
+  margin: 10px 0 0 !important;
+}
+.bonus-message {
+  font-size: 12px !important;
+  color: #60804e !important;
+  line-height: 1.9;
+  margin: 11px 0 0 !important;
+}
+.bonus-error {
+  color: #a66049 !important;
+  font-size: 12px !important;
+  line-height: 1.9;
+}
+.bonus-error button {
+  font-size: 11px;
+  text-decoration: underline;
+  margin-left: 8px;
+  color: #6b8560;
+}
+.bonus-rules {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #8d815a;
+}
+.bonus-rules summary {
+  cursor: pointer;
+}
+.bonus-rules ul {
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 2;
+}
+.bonus-signout {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: #8a967c;
+  font-size: 11px;
+  margin-top: 15px;
+  padding: 5px 0;
+}
+.bonus-login-form {
+  margin-top: 18px;
+}
+.bonus-login-form label {
+  font-size: 12px;
+  display: block;
+  color: #8d8565;
+}
+.bonus-login-form input {
+  margin: 9px 0 13px;
+  padding: 12px;
+  border: 1px solid #ded9bd;
+  border-radius: 9px;
+  width: 100%;
+  min-width: 0;
+  background: white;
+  font: inherit;
+}
+.bonus-login-form p {
+  font-size: 11px;
+  color: #9b947a;
+  line-height: 1.9;
+}
+.bonus-login-form .primary {
+  font-size: 12px;
+}
+.compact-bonus {
+  padding: 12px 15px;
+  margin: 0 0 20px;
+  background: #fff9e8;
+  border-radius: 14px;
+}
+.compact-bonus .bonus-heading h3 {
+  font-size: 11px !important;
+}
+.compact-bonus .bonus-heading > svg {
+  width: 16px;
+  height: 16px;
+}
+.compact-bonus .bonus-main {
+  margin-top: 8px;
+  gap: 8px;
+}
+.compact-bonus .bonus-balance b {
+  font-size: 22px;
+}
+.compact-bonus .bonus-balance > span {
+  font-size: 9px;
+}
+.compact-bonus .bonus-claim {
+  font-size: 10px;
+  padding: 8px 10px;
+  min-height: 35px;
+}
+.compact-bonus .bonus-hint {
+  font-size: 9px !important;
+}
+.compact-bonus .bonus-message {
+  font-size: 10px !important;
+}
+.bonus-auth-modal {
+  background: #fffdf4;
+}
+.bonus-auth-modal h2 {
+  font-size: 20px;
+  color: #647852;
+}
+.home-companion {
+  margin-top: 10px;
+}
+.home-scene:has(.compact-bonus) {
+  min-height: 810px;
+}
+@media (max-width: 650px) {
+  .login-bonus {
+    padding: 15px;
+    margin: 20px 0;
+  }
+  .bonus-main {
+    flex-wrap: wrap;
+  }
+  .bonus-claim {
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+  .bonus-balance b {
+    font-size: 25px;
+  }
+  .bonus-balance > span {
+    font-size: 10px;
+  }
+  .compact-bonus {
+    margin: 0 0 22px;
+    padding: 12px 13px;
+  }
+  .compact-bonus .bonus-main {
+    flex-wrap: nowrap;
+  }
+  .compact-bonus .bonus-balance {
+    gap: 5px;
+  }
+  .compact-bonus .bonus-balance > svg {
+    width: 19px;
+  }
+  .compact-bonus .bonus-hint {
+    font-size: 9px !important;
+  }
+  .bonus-login-form input {
+    font-size: 16px;
+  }
+  .home-scene:has(.compact-bonus) {
+    min-height: calc(100dvh - 83px - env(safe-area-inset-bottom, 0px));
+  }
+  .home-scene:has(.compact-bonus) .home-companion {
+    height: calc(100dvh - 510px - env(safe-area-inset-top, 0px));
+    min-height: 260px;
+  }
+  .compact-bonus .bonus-error {
+    font-size: 10px !important;
+  }
+}

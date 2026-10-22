@@ -11,6 +11,7 @@ import {
   MapPin,
   ArrowUpRight,
 } from "lucide-react";
+import LoginBonus from "./LoginBonus.jsx";
 import Character from "./Character.jsx";
 import useDialogFocus from "./useDialogFocus.js";
 import { dayKey, timeMinutes, validateEvent, layoutEvents } from "./planner.js";
@@ -286,6 +287,7 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
             <img src="/images/avatar-1.jpg" alt="あなた" />
           </button>
           <div className="home-schedule">
+            <LoginBonus compact />
             <div className="home-date">
               {shortDate(actualDate)}
               <button
