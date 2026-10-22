@@ -192,6 +192,23 @@ export function BonusProvider({ children }) {
       return false;
     }
   };
+  const signInWithGoogle = async () => {
+    setError("");
+    setMessage("");
+    try {
+      const { error } = await bonusClient.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin },
+      });
+      if (error) throw error;
+      return true;
+    } catch {
+      setError(
+        "Googleログインを開始できませんでした。通信とSupabaseのGoogle認証設定を確認してください。",
+      );
+      return false;
+    }
+  };
   const signOut = async () => {
     try {
       const { error } = await bonusClient.auth.signOut({ scope: "local" });
@@ -217,6 +234,7 @@ export function BonusProvider({ children }) {
         claim,
         refresh,
         sendLink,
+        signInWithGoogle,
         signOut,
         configured: !!bonusClient,
         configError: bonusConfigError,
@@ -229,13 +247,14 @@ export function BonusProvider({ children }) {
 function LoginForm() {
   const bonus = useContext(BonusContext);
   const [email, setEmail] = useState(""),
-    [sending, setSending] = useState(false);
+    [sending, setSending] = useState(false),
+    [googleLoading, setGoogleLoading] = useState(false);
   return (
     <form
       className="bonus-login-form"
       onSubmit={async (event) => {
         event.preventDefault();
-        if (sending) return;
+        if (sending || googleLoading) return;
         setSending(true);
         try {
           await bonus.sendLink(email.trim());
@@ -244,6 +263,24 @@ function LoginForm() {
         }
       }}
     >
+      <button
+        className="bonus-google"
+        type="button"
+        disabled={sending || googleLoading || bonus.authLoading}
+        onClick={async () => {
+          if (sending || googleLoading) return;
+          setGoogleLoading(true);
+          try {
+            await bonus.signInWithGoogle();
+          } finally {
+            setGoogleLoading(false);
+          }
+        }}
+      >
+        <LogIn size={18} aria-hidden="true" />
+        {googleLoading ? "Googleへ移動中…" : "Googleでログイン"}
+      </button>
+      <div className="bonus-login-divider">またはメールでログイン</div>
       <label>
         メールアドレス
         <input
@@ -258,7 +295,7 @@ function LoginForm() {
       </label>
       <button
         className="primary"
-        disabled={sending || bonus.authLoading}
+        disabled={sending || googleLoading || bonus.authLoading}
         type="submit"
       >
         <LogIn size={16} />

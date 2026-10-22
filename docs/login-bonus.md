@@ -49,3 +49,17 @@ Supabase標準メールの制限や配信設定によりメールが届かない
 - 接続済みモードも模擬サービスで確認：メールリンク要求、認証済みRPC、別アカウントの残高が残らないこと、ログアウト。実際のメールやSupabaseリクエストは送信していない。
 - ビルド設定で新形式の管理者キー・旧service-roleキーの公開を拒否することを確認。
 - 本番Supabaseへの接続・メールの実配信・実機iPhoneでのログインは未確認。設定した本番環境での確認が必要。
+
+
+## Googleログインの追加設定
+
+1. Google Cloud Consoleでプロジェクトを選択し、Google Auth Platformでアプリ名・サポートメール・連絡先を設定する。
+2. 一般のGoogleアカウントを対象にする場合、AudienceはExternalを選ぶ。Testing中はログインするGoogleアカウントをTest usersへ追加する。一般公開前には公開状態・Google側の要件を確認する。
+3. SupabaseのAuthentication → Sign In / Providers → Googleを開く。表示されたCallback URLをコピーする。
+4. Google側でOAuthクライアント（種類：Web application）を作成し、Authorized redirect URIsへ上記Callback URLをそのまま登録する。VercelのURLではなくSupabaseのコールバックを指定する。
+5. 発行されたClient IDとClient SecretをSupabaseのGoogleプロバイダー設定に入れ、有効化して保存する。Client Secretはチャット・Git・VercelのVITE変数に入れない。
+6. SupabaseのSite URL・Redirect URLsに、利用するぴあれぽの公開URLを登録する（メールログインと共通）。
+7. Googleログイン対応版をデプロイ後、「Googleでログイン」から認証し、アプリへ戻ることとコインの受け取りを確認する。実機iPhoneでもSafariから確認する。
+
+Googleログインでも同期対象はコインのみ。メールログインとのアカウント統合はSupabaseの認証設定・メール検証状態に依存するため、既存ユーザーは同じメールアドレスを使い、受け取り前に累計を確認する。
+Googleプロバイダー未設定ではボタンからログインできない。コード追加だけでGoogle側の設定が完了したとは扱わない。

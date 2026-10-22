@@ -1975,3 +1975,28 @@ main {
     font-size: 10px !important;
   }
 }
+
+.bonus-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid #b8ceca;
+  border-radius: 12px;
+  background: #fff;
+  color: #253e39;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bonus-google:hover:not(:disabled) { background: #f0faf7; }
+.bonus-google:disabled { opacity: .6; cursor: wait; }
+.bonus-login-divider {
+  margin: 14px 0;
+  text-align: center;
+  color: #62746f;
+  font-size: 12px;
+}
