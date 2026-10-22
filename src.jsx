@@ -1367,10 +1367,11 @@ function App() {
                       お知らせを表示する
                     </label>
                     <p>
-                      記録はこのブラウザに保存されています。アカウントや端末間同期はまだありません。
+                      note・タスク・予定はこのブラウザに保存されています。ログインで同期するのはコインだけです。
                     </p>
                   </section>
                   <BackupTools notes={notes} onRestore={change} />
+                  <p><a href="/privacy.html">プライバシーポリシー</a></p>
                   <h3>
                     わたしの記録 <small>日付の新しい順</small>
                   </h3>
