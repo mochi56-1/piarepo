@@ -1,0 +1,1725 @@
+/* Figma export: mint rooms, paper surfaces and the original companion. */
+:root {
+  --room: #d1f3ef;
+  --paper: #fff6e8;
+  --ink: #263b36;
+  --accent: #43cbbd;
+  --floor: #ddbb83;
+  background: var(--room);
+  color: var(--ink);
+}
+body {
+  background: var(--room);
+}
+.sidebar {
+  background: #fffdf8;
+  border-color: #b7ded7;
+}
+.nav-item.active {
+  background: #dcf5ee;
+  color: #277968;
+}
+.nav-item:hover {
+  background: #ecf8f1;
+}
+.tagline {
+  color: #7f9b8c;
+}
+.sidebar-note {
+  background: #e6f3e8;
+  color: #648a6c;
+}
+.sidebar-note p {
+  color: #64816d;
+}
+.account small {
+  color: #8eaa98;
+}
+header {
+  background: var(--room);
+  border-color: #bce5dc;
+}
+.breadcrumb {
+  color: #68988c;
+}
+.header-actions .date {
+  color: #6d9387;
+}
+.logo {
+  color: #294d41;
+}
+main {
+  min-height: 100dvh;
+}
+.primary {
+  background: #328678;
+  color: white;
+  box-shadow: none;
+}
+.primary:hover {
+  background: #297264;
+}
+.heading h1 {
+  color: #254d41;
+}
+.heading p {
+  color: #6e9184;
+}
+.eyebrow {
+  color: #7d9e8b;
+}
+.panel,
+.post {
+  border: 0;
+  box-shadow: none;
+}
+.post {
+  border-radius: 26px;
+  padding: 27px;
+}
+.heading {
+  margin-bottom: 28px;
+}
+.post-top .mood {
+  margin-left: auto;
+}
+.mood {
+  background: transparent;
+  padding: 4px 0;
+  flex-direction: column;
+  gap: 3px;
+  color: #45685c;
+  font-size: 11px;
+}
+.mood svg {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 3px;
+}
+.mood.coral svg {
+  background: #f9ddd3;
+}
+.mood.mint svg {
+  background: #d6ebd6;
+}
+.mood.neutral svg {
+  background: #e7e4d9;
+}
+.mood.blue svg {
+  background: #dce5f2;
+}
+.mood.purple svg {
+  background: #e5dff1;
+}
+.author b {
+  color: #254239;
+  font-family: inherit;
+  font-size: 16px;
+}
+.author small {
+  color: #8b9c94;
+}
+.feedback-card .post-text > p {
+  color: #354a42;
+  font-size: 15px;
+}
+.post h2 {
+  font-size: 20px;
+}
+.post-image {
+  height: 190px;
+  border-radius: 12px;
+}
+.post-layout {
+  gap: 25px;
+}
+.stamp-reactions {
+  margin-top: 19px;
+}
+.reactions .stamp {
+  background: #f4f6ee;
+  border-color: #e5ece2;
+}
+.reactions .selected-stamp {
+  background: #e2f1d9;
+  border-color: #a6c79b;
+}
+.private-label {
+  color: #7b9687;
+}
+.note-menu {
+  border-color: #cbe0d3;
+  background: #fffef9;
+}
+.note-menu button {
+  color: #466956;
+}
+.card-open {
+  border-radius: 26px;
+}
+.full-calendar {
+  background: var(--paper);
+  padding: 28px;
+  border-radius: 6px;
+}
+.full-calendar .calendar-grid {
+  gap: 15px;
+  margin-top: 24px;
+}
+.full-calendar .calendar-grid button {
+  width: 52px;
+  max-width: 100%;
+  height: 52px;
+  border-radius: 50%;
+  justify-self: center;
+  color: #547466;
+  background: #e3e8df;
+  font-size: 15px;
+}
+.full-calendar .calendar-grid .today {
+  background: #54c8b7;
+  color: #163e31;
+  box-shadow: inset 0 0 0 2px #267764;
+}
+.full-calendar .calendar-grid .mood-day.today {
+  box-shadow: inset 0 0 0 2px #418978;
+}
+.calendar-title h2 {
+  color: #315c4c;
+}
+.calendar-title button {
+  color: #547869;
+}
+.calendar-grid > span {
+  font-size: 12px;
+  color: #547869;
+}
+.calendar-foot {
+  border-color: #e2d9c4;
+  color: #79907b;
+}
+.record-days b {
+  color: #5f886d;
+}
+.calendar-foot .tiny-dot {
+  background: #8ebc9d;
+}
+.day-heading h2 {
+  color: #315e4b;
+}
+.back-to-month {
+  display: none;
+}
+.week-review {
+  background: #fffdf5;
+  border-radius: 22px;
+}
+.week-review .small-title h3 {
+  color: #3c6550;
+}
+.week-range {
+  color: #7f9e83 !important;
+}
+.mood-panel > p {
+  color: #83a38c;
+  border-color: #e5ebdc;
+}
+.daily-prompt {
+  background: #e7f2da;
+  border-color: #dcebc9;
+  border-radius: 22px;
+}
+.daily-prompt h2 {
+  color: #436844;
+}
+.daily-prompt p,
+.daily-prompt button,
+.prompt-top {
+  color: #829f73;
+}
+.prompt-flower {
+  color: #b9d3a5;
+}
+.mini-calendar {
+  background: var(--paper);
+  border-radius: 20px;
+}
+.plaza-intro {
+  background: #bce8de;
+  border: 0;
+  border-radius: 14px;
+}
+.plaza-intro h2 {
+  color: #2d6651;
+}
+.plaza-intro p,
+.sample-label {
+  color: #669a83;
+}
+.plaza-reading-progress {
+  display: flex;
+  gap: 5px;
+  margin: 0 0 20px;
+}
+.plaza-reading-progress span {
+  height: 4px;
+  background: #b5d9cd;
+  flex: 1;
+  border-radius: 3px;
+}
+.plaza-reading-progress span:first-child,
+.plaza-reading-progress .current {
+  background: #5b9180;
+}
+.plaza-end {
+  text-align: center;
+  padding: 30px 0 0;
+}
+.plaza-end > p {
+  font-size: 13px;
+  color: #487564;
+}
+.plaza-companions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 210px;
+  margin-top: 18px;
+}
+.plaza-companions .companion {
+  width: 105px;
+  height: 205px;
+  margin: 0 4px;
+}
+.plaza-end .text-action {
+  margin: 15px auto 25px;
+  justify-content: center;
+  color: #457863;
+}
+.companion {
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+}
+.composer-sheet {
+  background: #fffef9;
+  border-radius: 27px;
+}
+.note-editor .editor-intro {
+  color: #6b9b83;
+  border-color: #e0ece0;
+}
+.editor-intro h2 {
+  color: #365e49;
+}
+.writing-prompts {
+  background: #edf7e9;
+}
+.writing-prompts > span {
+  color: #759d75;
+}
+.writing-prompts button {
+  color: #5b8461;
+  background: #fffef8;
+  border-color: #d4e8cc;
+}
+.writing-prompts button[aria-pressed="true"] {
+  color: #3e714a;
+  background: #d9efd4;
+  border-color: #97bf95;
+}
+.composer-sheet .note-editor input:not([type="radio"]),
+.composer-sheet .note-editor textarea {
+  border-color: #b8d6c6;
+  background: white;
+  color: #2f4b3d;
+}
+.composer-sheet .note-editor label,
+.composer-sheet .note-editor legend {
+  color: #49705b;
+}
+.feeling-option {
+  border-radius: 12px;
+}
+.feeling-option.chosen {
+  border-color: #4c9d85;
+}
+.voice-button {
+  background: #e7f4e8;
+  border-color: #cbe1cd;
+  color: #4e855f;
+}
+.voice-button.recording {
+  background: #ffefdb;
+  color: #ad7339;
+  border-color: #edcca8;
+}
+.voice-help {
+  color: #77957c;
+}
+.visibility-field label {
+  background: #f4f8ef;
+  border-color: #d9e8d4;
+}
+.visibility-field label:has(input:checked) {
+  background: #dff2e2;
+  border-color: #a8cbae;
+}
+.visibility-field input {
+  accent-color: #328678;
+}
+.visibility-field b {
+  color: #3a6d4e;
+}
+.visibility-field small {
+  color: #769a78;
+}
+.attach-button {
+  background: #e9f3e8;
+  color: #598363;
+}
+.composer-character {
+  height: 130px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+.composer-character .companion {
+  height: 190px;
+  width: 150px;
+}
+.composer-sheet .note-editor {
+  position: relative;
+}
+.profile {
+  border-radius: 26px;
+  background: #fffef8;
+}
+.profile-entry {
+  background: #edf6e9;
+}
+.profile-settings,
+.backup-tools,
+.iphone-help {
+  background: #f4f7e9;
+  border-color: #deead3;
+}
+.profile-settings label,
+.backup-tools h3,
+.iphone-help h3 {
+  color: #5d8059;
+}
+.profile-settings p,
+.backup-tools p,
+.iphone-help p {
+  color: #859c76;
+}
+.detail-modal {
+  background: #fffef9;
+  border-radius: 27px;
+}
+.reflection {
+  background: #e9f3e1;
+}
+.detail-actions button {
+  border-color: #c5dcb8;
+  color: #668857;
+}
+.comment-suggestions button {
+  border-color: #bcd5b0;
+  color: #718d60;
+}
+.comment-section .comment {
+  background: #f3f7ed;
+  border-color: #dfead5;
+}
+.mobile-compose {
+  display: none !important;
+}
+.mobile-week {
+  margin-top: 22px;
+  order: 3;
+}
+.main-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.main-column > .feed {
+  width: 100%;
+}
+.app[data-page="ホーム"] .mobile-week,
+.app[data-page="タスク"] .mobile-week,
+.app[data-page="スケジュール"] .mobile-week,
+.app[data-page="広場"] .mobile-week {
+  display: none;
+}
+.app[data-page="ホーム"] .right-column,
+.app[data-page="タスク"] .right-column,
+.app[data-page="スケジュール"] .right-column {
+  display: none;
+}
+.app[data-page="ホーム"] .columns,
+.app[data-page="タスク"] .columns,
+.app[data-page="スケジュール"] .columns {
+  grid-template-columns: minmax(0, 1fr);
+}
+/* New planner screens */
+.home-scene {
+  position: relative;
+  min-height: 690px;
+  isolation: isolate;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--room);
+  padding: 25px;
+}
+.home-schedule {
+  position: relative;
+  z-index: 2;
+  max-width: 530px;
+  margin: 0 auto;
+}
+.home-date {
+  font-size: 15px;
+  margin: 0 0 14px;
+  position: relative;
+  color: #315945;
+}
+.round-add {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  background: white;
+  display: grid;
+  place-items: center;
+  color: #315445;
+}
+.now-card {
+  background: #fffef6;
+  padding: 19px 24px;
+  min-height: 100px;
+  position: relative;
+}
+.now-card small {
+  color: #78917e;
+  font-size: 13px;
+}
+.now-card h2 {
+  font-size: 21px;
+  font-weight: 600;
+  margin: 10px 0 0;
+  color: #345443;
+}
+.next-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #b9ded1;
+  padding: 12px 18px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #527a62;
+}
+.next-card b {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.schedule-link {
+  margin: 13px 0 0 auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: #528067;
+}
+.home-ground {
+  position: absolute;
+  inset: auto 0 0;
+  height: 30%;
+  background: var(--floor);
+  z-index: -1;
+}
+.home-companion {
+  height: 410px;
+  position: relative;
+  max-width: 460px;
+  margin: 10px auto 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.home-companion > .companion {
+  width: 210px;
+  height: 390px;
+  max-width: none;
+}
+.thought-note {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  max-width: 150px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-direction: column;
+  color: #658270;
+  font-size: 11px;
+  background: white;
+  border-radius: 50% 50% 40% 50%;
+  padding: 17px 15px;
+}
+.thought-note:after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  right: 12px;
+  background: white;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.thought-face {
+  font-size: 28px;
+  line-height: 1;
+  color: #fff;
+  background: #395e47;
+  width: 36px;
+  height: 36px;
+  display: block;
+  border-radius: 50%;
+  letter-spacing: 6px;
+  padding-left: 5px;
+}
+.home-note-button {
+  position: absolute;
+  right: 0;
+  bottom: 30px;
+}
+.task-done {
+  position: absolute;
+  right: 15px;
+  top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #4d8761;
+  font-size: 12px;
+}
+.planner-tabs {
+  display: flex;
+  gap: 15px;
+  padding: 0 22px;
+  justify-content: center;
+}
+.planner-tabs button {
+  width: 210px;
+  max-width: 50%;
+  padding: 15px 10px;
+  color: #859d8c;
+  background: white;
+  font-size: 18px;
+}
+.planner-tabs .active {
+  color: #194a3e;
+  background: #46cdbd;
+}
+.paper-panel {
+  background: var(--paper);
+  border: 1px solid #c6c5a8;
+  box-shadow:
+    7px 8px 0 #fffaf0,
+    8px 9px 0 #c7c4ab;
+  padding: 30px;
+  position: relative;
+  min-height: 500px;
+  margin-bottom: 18px;
+}
+.paper-panel h2 {
+  font-size: 17px;
+  font-weight: 500;
+  color: #567258;
+  margin: 0 0 15px;
+}
+.planner-hint {
+  font-size: 12px;
+  color: #83967c;
+  line-height: 1.9;
+}
+.task-list-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border-bottom: 1px solid #e6e4cf;
+  padding: 17px 2px;
+}
+.task-list-row input {
+  width: 21px;
+  height: 21px;
+  accent-color: #43ac91;
+  flex-shrink: 0;
+}
+.task-list-row > button:not(.task-to-schedule) {
+  font-size: 16px;
+  flex: 1;
+  text-align: left;
+  overflow-wrap: anywhere;
+  min-width: 0;
+  color: #3d654c;
+}
+.task-list-row.done > button:not(.task-to-schedule) {
+  text-decoration: line-through;
+  color: #a3b29d;
+}
+.task-to-schedule {
+  padding: 8px;
+  color: #8ca582;
+}
+.planner-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 52px;
+  min-height: 52px;
+  border-radius: 27px;
+  background: #dce8d6;
+  color: #426c4c;
+  padding: 12px 17px;
+  margin: 25px 0 0 auto;
+  font-size: 12px;
+}
+.planner-add:hover {
+  background: #cae0c2;
+}
+.planner-empty {
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  color: #a4b398;
+}
+.planner-empty p {
+  font-size: 13px;
+  text-align: center;
+}
+.task-map {
+  height: 480px;
+  min-height: 260px;
+  position: relative;
+  background: white;
+  margin: 28px 8px;
+  isolation: isolate;
+  touch-action: manipulation;
+  cursor: default;
+  border-radius: 3px;
+}
+.map-axis {
+  position: absolute;
+  background: #4ed7c3;
+  pointer-events: none;
+}
+.map-axis.horizontal {
+  left: 5%;
+  right: 5%;
+  top: 50%;
+  height: 2px;
+}
+.map-axis.vertical {
+  top: 5%;
+  bottom: 5%;
+  left: 50%;
+  width: 2px;
+}
+.map-axis:before,
+.map-axis:after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: solid #4ed7c3;
+  border-width: 0 2px 2px 0;
+}
+.horizontal:before {
+  left: 0;
+  top: -4px;
+  transform: rotate(135deg);
+}
+.horizontal:after {
+  right: 0;
+  top: -4px;
+  transform: rotate(-45deg);
+}
+.vertical:before {
+  top: 0;
+  left: -4px;
+  transform: rotate(225deg);
+}
+.vertical:after {
+  bottom: 0;
+  left: -4px;
+  transform: rotate(45deg);
+}
+.axis-label {
+  position: absolute;
+  font-size: 10px;
+  background: #fff;
+  color: #99b2a3;
+  padding: 4px;
+  z-index: 0;
+}
+.axis-label.top {
+  left: 50%;
+  top: 1%;
+  transform: translateX(-50%);
+}
+.axis-label.bottom {
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+.axis-label.left {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+.axis-label.right {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+.task-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #e2e6df;
+  color: #335b42;
+  padding: 8px 12px;
+  border-radius: 8px;
+  max-width: 35%;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  z-index: 1;
+  box-shadow: 0 2px 4px #42654910;
+}
+.pin-picker {
+  height: 230px;
+  min-height: 230px;
+  margin: 20px 0;
+  cursor: crosshair;
+  border: 1px solid #d1e8d2;
+}
+.selected-pin {
+  padding: 8px;
+  background: #7ecbb2;
+  color: #fff;
+}
+.pin-coordinate {
+  font-size: 11px;
+  color: #88a189;
+}
+.schedule-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+  color: #3a6a52;
+}
+.schedule-date button {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+.schedule-date label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+}
+.schedule-date label span {
+  font-size: 10px;
+  color: #7c9c87;
+}
+.schedule-date input {
+  font-size: 18px;
+  border: 0;
+  background: transparent;
+  color: #3d6c52;
+  max-width: 190px;
+  text-align: center;
+  outline-color: #78c2a8;
+}
+.timeline {
+  position: relative;
+  margin: 20px 0 30px;
+}
+.hour-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e3e2cf;
+}
+.hour-line span {
+  position: absolute;
+  left: -3px;
+  top: -9px;
+  font-size: 12px;
+  background: var(--paper);
+  padding-right: 8px;
+  color: #84967b;
+}
+.schedule-event {
+  position: absolute;
+  background: #c9e8d0;
+  border-left: 3px solid #77b48d;
+  border-radius: 5px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  text-align: left;
+  padding: 7px 10px;
+  overflow: hidden;
+  min-height: 36px;
+  color: #3d6848;
+}
+.schedule-event b {
+  font-weight: 500;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+.schedule-event small {
+  font-size: 10px;
+  margin-top: 3px;
+}
+.schedule-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+.schedule-tools > button:not(.planner-add) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: #6a8764;
+}
+.schedule-tools .planner-add {
+  margin: 0;
+}
+.task-chooser {
+  margin-top: 20px;
+  padding: 18px;
+  background: #fffef6;
+  border: 1px solid #dddfc8;
+  border-radius: 12px;
+}
+.task-chooser h3 {
+  font-size: 13px;
+  color: #6e8967;
+  margin: 0 0 10px;
+}
+.task-chooser > button {
+  width: 100%;
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  text-align: left;
+  border-bottom: 1px solid #e8eddc;
+  color: #567a50;
+  overflow-wrap: anywhere;
+}
+.task-chooser p {
+  font-size: 12px;
+  color: #839b78;
+}
+.task-chooser p button {
+  color: #3b8d62;
+  text-decoration: underline;
+}
+.planner-modal {
+  background: #fffaf0;
+}
+.planner-modal label {
+  color: #688662;
+}
+.planner-modal input {
+  border-color: #d2dec5;
+}
+.planner-modal h2 {
+  color: #456e48;
+}
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.time-inputs label {
+  flex: 1;
+  min-width: 0;
+}
+.time-inputs > span {
+  margin-top: 38px;
+  color: #83a377;
+}
+.time-inputs input {
+  font-size: 16px;
+}
+.schedule-view {
+  width: 100%;
+}
+@media (max-width: 980px) {
+  .home-scene {
+    min-height: 640px;
+  }
+  .home-companion {
+    height: 385px;
+  }
+  .home-companion > .companion {
+    height: 370px;
+  }
+  .home-note-button {
+    font-size: 11px;
+    padding: 11px;
+    bottom: 18px;
+  }
+  .home-companion .thought-note {
+    font-size: 10px;
+    max-width: 130px;
+    padding: 14px;
+  }
+  .home-ground {
+    height: 30%;
+  }
+}
+@media (max-width: 650px) {
+  header {
+    background: var(--room);
+    border: 0;
+    height: calc(64px + env(safe-area-inset-top, 0px));
+  }
+  .breadcrumb:before {
+    font-size: 25px;
+    color: #254b3c;
+  }
+  .header-actions {
+    gap: 2px;
+  }
+  .header-profile img {
+    width: 27px;
+    height: 27px;
+  }
+  .content {
+    padding-top: 12px;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+  .heading {
+    margin-bottom: 22px;
+  }
+  .heading .eyebrow {
+    display: none;
+  }
+  .heading h1 {
+    font-size: 20px;
+    margin: 0 0 8px;
+  }
+  .heading p {
+    font-size: 12px;
+  }
+  .app[data-page="ホーム"] .heading,
+  .app[data-page="カレンダー"] .heading {
+    display: none;
+  }
+  .app[data-page="ホーム"] header {
+    display: none;
+  }
+  .app[data-page="ホーム"] .content {
+    padding: 0 0 calc(90px + env(safe-area-inset-bottom, 0px));
+  }
+  .app[data-page="ホーム"] .home-scene {
+    border-radius: 0;
+    min-height: calc(100dvh - 82px - env(safe-area-inset-bottom, 0px));
+    padding: calc(40px + env(safe-area-inset-top, 0px)) 25px 0;
+  }
+  .home-schedule {
+    max-width: none;
+  }
+  .home-date {
+    font-size: 14px;
+    padding: 0 6px;
+    margin-bottom: 14px;
+  }
+  .round-add {
+    width: 48px;
+    height: 48px;
+    top: -5px;
+  }
+  .now-card {
+    padding: 17px;
+    min-height: 94px;
+  }
+  .now-card h2 {
+    font-size: 21px;
+  }
+  .next-card {
+    font-size: 11px;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .schedule-link {
+    font-size: 12px;
+    margin-top: 12px;
+  }
+  .home-companion {
+    height: calc(100dvh - 355px - env(safe-area-inset-top, 0px));
+    min-height: 290px;
+    max-height: 480px;
+    margin-top: 5px;
+  }
+  .home-companion > .companion {
+    height: 100%;
+    width: 55%;
+  }
+  .home-companion .thought-note {
+    left: 0;
+    top: 25px;
+    max-width: 120px;
+    font-size: 10px;
+    padding: 14px 10px;
+  }
+  .home-note-button {
+    right: 0;
+    bottom: 17px;
+    font-size: 11px;
+    padding: 11px;
+  }
+  .home-ground {
+    height: 28%;
+  }
+  .mobile-nav {
+    height: calc(83px + env(safe-area-inset-bottom, 0px));
+    padding: 13px 5px calc(10px + env(safe-area-inset-bottom, 0px));
+    border: 0;
+    border-radius: 0;
+    background: #fffefa;
+    overflow: visible;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 15;
+  }
+  .mobile-nav button {
+    min-width: 0;
+    flex: 1;
+    min-height: 50px;
+    color: #83978c;
+    gap: 5px;
+    font-size: 9px;
+    position: relative;
+  }
+  .mobile-nav button svg {
+    width: 25px;
+    height: 25px;
+  }
+  .mobile-nav .active {
+    color: #1c5340;
+  }
+  .mobile-nav .home-nav {
+    max-width: 74px;
+    width: 74px;
+    height: 74px;
+    min-height: 74px;
+    flex: none;
+    border-radius: 50%;
+    background: #dce8dc;
+    margin-top: -36px;
+    color: #3d694c;
+    justify-content: center;
+  }
+  .mobile-nav .home-nav.active {
+    background: #b8dbc4;
+    color: #1e4e34;
+  }
+  .mobile-nav .home-nav svg {
+    height: 35px;
+    width: 35px;
+    stroke-width: 2.5;
+  }
+  .mobile-nav .home-nav span {
+    font-size: 9px;
+  }
+  .feedback-card {
+    padding: 23px;
+    border-radius: 27px;
+  }
+  .feedback-card .post-layout {
+    gap: 15px;
+  }
+  .feedback-card .post-text > p {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+  .feedback-card .post-top {
+    margin-bottom: 18px;
+  }
+  .feedback-card .mood {
+    font-size: 11px !important;
+  }
+  .feedback-card .mood svg {
+    width: 32px;
+    height: 32px;
+  }
+  .feedback-card .post h2,
+  .feedback-card h2 {
+    font-size: 18px;
+  }
+  .feedback-card .post-image {
+    height: 180px;
+  }
+  .feedback-card .author b {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .feedback-card .author small {
+    font-size: 10px;
+  }
+  .stamp-reactions {
+    gap: 6px;
+  }
+  .reactions .stamp {
+    padding: 5px 8px;
+  }
+  .stamp-emoji {
+    font-size: 21px;
+  }
+  .plaza-intro {
+    padding: 13px 16px;
+    margin-bottom: 18px;
+  }
+  .plaza-intro h2 {
+    font-size: 13px;
+  }
+  .plaza-intro p {
+    font-size: 10px;
+  }
+  .plaza-reading-progress {
+    margin: 3px 0 22px;
+  }
+  .full-calendar {
+    padding: 25px 17px;
+    border-radius: 0;
+    margin: 6px 0 0;
+  }
+  .calendar-title h2 {
+    font-size: 19px !important;
+  }
+  .full-calendar .calendar-grid {
+    gap: 16px 5px;
+    margin-top: 24px;
+  }
+  .full-calendar .calendar-grid button {
+    height: 38px;
+    width: 38px;
+    font-size: 13px;
+  }
+  .full-calendar .calendar-grid > span {
+    font-size: 12px;
+  }
+  .calendar-foot {
+    margin-top: 22px;
+    font-size: 10px;
+  }
+  .calendar-foot .record-days {
+    font-size: 12px;
+  }
+  .app[data-page="カレンダー"][data-day-open="false"] .day-summary {
+    display: none;
+  }
+  .app[data-page="カレンダー"][data-day-open="true"] .full-calendar {
+    display: none;
+  }
+  .app[data-page="カレンダー"][data-day-open="true"] .back-to-month {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #45745b;
+    font-size: 12px;
+    padding: 0;
+    margin: 0 0 20px;
+  }
+  .day-summary {
+    margin-top: 12px;
+  }
+  .day-heading .eyebrow {
+    display: none;
+  }
+  .day-heading h2 {
+    font-size: 19px;
+    color: #315d43;
+  }
+  .day-heading .primary {
+    width: auto;
+    padding: 10px 12px;
+    font-size: 11px;
+    min-height: 42px;
+  }
+  .day-heading {
+    align-items: center;
+  }
+  .mobile-week {
+    margin-top: 25px;
+  }
+  .week-review {
+    padding: 19px !important;
+    border-radius: 20px;
+  }
+  .week-review .small-title h3 {
+    font-size: 14px;
+  }
+  .plaza-end {
+    padding-top: 25px;
+  }
+  .plaza-companions {
+    height: 180px;
+  }
+  .plaza-companions .companion {
+    height: 170px;
+    width: 86px;
+  }
+  .paper-panel {
+    padding: 22px 18px;
+    min-height: 490px;
+  }
+  .paper-panel h2 {
+    font-size: 15px;
+  }
+  .planner-tabs {
+    gap: 12px;
+    padding: 0 10px;
+  }
+  .planner-tabs button {
+    font-size: 17px;
+    padding: 13px 8px;
+  }
+  .task-map {
+    height: 430px;
+    margin: 25px 2px;
+  }
+  .pin-picker {
+    height: 230px;
+    min-height: 230px;
+    margin: 18px 0;
+  }
+  .task-pin {
+    font-size: 11px;
+    padding: 8px;
+    max-width: 37%;
+  }
+  .axis-label {
+    font-size: 8px;
+  }
+  .task-list-row {
+    gap: 9px;
+    padding: 15px 0;
+  }
+  .task-list-row > button:not(.task-to-schedule) {
+    font-size: 15px;
+  }
+  .planner-hint {
+    font-size: 11px;
+  }
+  .schedule-date {
+    margin: 5px 0 18px;
+    gap: 10px;
+  }
+  .schedule-date input {
+    font-size: 16px;
+    width: 168px;
+  }
+  .schedule-view .paper-panel {
+    padding: 20px 14px;
+  }
+  .schedule-event {
+    padding: 6px;
+    min-height: 34px;
+  }
+  .schedule-event b {
+    font-size: 12px;
+  }
+  .schedule-event small {
+    font-size: 9px;
+  }
+  .planner-modal input,
+  .planner-modal textarea {
+    font-size: 16px;
+  }
+  .time-inputs {
+    gap: 10px;
+  }
+  .planner-modal {
+    padding: 27px 20px;
+  }
+  .composer-sheet {
+    border-radius: 28px;
+  }
+  .composer-sheet .note-editor {
+    padding: 28px 23px;
+  }
+  .composer-sheet .editor-intro p {
+    font-size: 11px;
+  }
+  .composer-sheet .feeling-option {
+    background: #e7ece6;
+    color: #49624e;
+    opacity: 1;
+    border-radius: 50% 50% 12px 12px;
+  }
+  .composer-sheet .feeling-option.chosen {
+    background: #d0eee1;
+    border-color: #659f83;
+  }
+  .composer-sheet .note-editor textarea {
+    min-height: 160px;
+  }
+  .composer-character {
+    height: 125px;
+    margin-bottom: -20px;
+    opacity: 1;
+  }
+  .composer-character .companion {
+    height: 165px;
+    width: 130px;
+  }
+  .detail-modal {
+    border-radius: 28px;
+  }
+  .profile {
+    padding: 26px 20px;
+  }
+  .header-profile {
+    min-width: 38px;
+  }
+  .app[data-page="ホーム"] .feedback {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 5;
+  }
+}
+@media (max-width: 360px) {
+  .content {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .full-calendar {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .full-calendar .calendar-grid button {
+    height: 33px;
+    width: 33px;
+  }
+  .feedback-card {
+    padding: 20px 17px;
+  }
+  .reactions .stamp {
+    padding: 5px 7px;
+  }
+  .stamp-reactions {
+    gap: 5px;
+  }
+  .home-companion .thought-note {
+    max-width: 95px;
+    font-size: 9px;
+  }
+  .home-note-button {
+    font-size: 10px;
+    padding: 9px;
+  }
+  .next-card {
+    gap: 8px;
+  }
+  .home-scene {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+.home-profile {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  z-index: 4;
+  padding: 6px;
+}
+.home-profile img {
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+.home-scene .home-schedule {
+  padding-top: 20px;
+}
+.task-map {
+  overflow: hidden;
+}
+.reading-mode {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  padding: 4px;
+  border-radius: 23px;
+  background: #bfe6d9;
+  width: fit-content;
+}
+.reading-mode button {
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 12px;
+  color: #6e9681;
+}
+.reading-mode .active {
+  background: #fffef8;
+  color: #3b765c;
+}
+.plaza-reading-progress button {
+  height: 5px;
+  flex: 1;
+  padding: 0;
+  min-width: 0;
+  background: #b4d5c8;
+  border-radius: 4px;
+}
+.plaza-reading-progress button.current {
+  background: #5b9180;
+}
+.reader-count {
+  text-align: right;
+  font-size: 11px;
+  color: #719b83;
+  margin: -12px 0 15px;
+}
+.reader-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+.reader-controls button {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid #a8cfb9;
+  background: #edf8eb;
+  color: #4b7c60;
+  padding: 10px 15px;
+  border-radius: 23px;
+  font-size: 12px;
+}
+.reader-controls button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.optional-title {
+  margin: 15px 0 0;
+  border-bottom: 1px solid #e6eee1;
+  padding-bottom: 12px;
+}
+.optional-title summary {
+  font-size: 12px;
+  color: #8aa282;
+  cursor: pointer;
+}
+.optional-title label {
+  margin-top: 14px !important;
+}
+.writing-prompts {
+  display: block;
+  padding: 10px 13px;
+  margin: 18px 0 0;
+}
+.writing-prompts summary {
+  font-size: 12px;
+  color: #7d9d77;
+  cursor: pointer;
+}
+.writing-prompts button {
+  margin: 10px 5px 0 0;
+}
+.planner-drawer {
+  z-index: 25;
+  align-items: flex-end;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+.planner-drawer .task-chooser {
+  position: relative;
+  width: 530px;
+  max-width: 100%;
+  margin: 0;
+  background: #fffaf0;
+  border-radius: 22px;
+  padding: 24px;
+}
+.planner-drawer .task-map {
+  height: 300px;
+  min-height: 240px;
+  margin: 15px 0 0;
+}
+.planner-drawer .close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.task-chooser h3 {
+  padding-right: 20px;
+}
+.task-chooser .task-pin {
+  color: #31553c;
+}
+.planner-drawer .task-chooser > p {
+  margin-bottom: 0;
+}
+@media (max-width: 650px) {
+  .home-profile {
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    right: 15px;
+  }
+  .home-scene .home-schedule {
+    padding-top: 0;
+  }
+  .app[data-page="ホーム"] .home-scene {
+    padding-top: calc(60px + env(safe-area-inset-top, 0px));
+  }
+  .home-companion {
+    height: calc(100dvh - 375px - env(safe-area-inset-top, 0px));
+  }
+  .reading-mode {
+    margin: 0 0 17px;
+  }
+  .reading-mode button {
+    font-size: 11px;
+    padding: 8px 15px;
+  }
+  .reader-controls button {
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+  .composer-sheet .optional-title summary,
+  .composer-sheet .writing-prompts summary {
+    font-size: 12px;
+  }
+  .composer-sheet .writing-prompts {
+    margin-top: 15px;
+  }
+  .composer-sheet .body-label {
+    margin-top: 15px;
+  }
+  .planner-drawer {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .planner-drawer .task-chooser {
+    padding: 23px 19px;
+  }
+  .planner-drawer .task-map {
+    height: 280px;
+  }
+}
+.feedback-card .author small {
+  display: none;
+}
+.card-date {
+  position: relative;
+  pointer-events: none;
+  display: block;
+  text-align: right;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #8b9f93;
+}
+.schedule-event {
+  min-height: 36px;
+}
+@media (max-width: 650px) {
+  .app[data-page="ホーム"] .content {
+    padding-bottom: calc(83px + env(safe-area-inset-bottom, 0px));
+  }
+  .app[data-page="ホーム"] .home-scene {
+    min-height: calc(100dvh - 83px - env(safe-area-inset-bottom, 0px));
+  }
+}
+.home-profile {
+  display: none;
+}
+@media (max-width: 650px) {
+  .home-profile {
+    display: block;
+  }
+  .mobile-nav button.active {
+    color: #1c5340;
+  }
+  .mobile-nav button.home-nav.active {
+    color: #1e4e34;
+  }
+  .app[data-page="広場"][data-reader="true"] .heading,
+  .app[data-page="広場"][data-reader="true"] .plaza-intro {
+    display: none;
+  }
+  .app[data-page="広場"][data-reader="true"] .content {
+    padding-top: 2px;
+  }
+  .app[data-page="広場"][data-reader="true"] .reading-mode {
+    margin-bottom: 17px;
+  }
+  .app[data-page="広場"][data-reader="true"] .feedback-card .post-image {
+    height: 130px;
+  }
+  .app[data-page="広場"][data-reader="true"] .feedback-card .post-text > p {
+    max-height: 210px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .app[data-page="広場"][data-reader="true"] .reader-controls {
+    margin-top: 13px;
+  }
+  .app[data-page="広場"][data-reader="true"] .plaza-end {
+    padding-top: 15px;
+  }
+  .app[data-page="広場"][data-reader="true"] .plaza-companions {
+    height: 130px;
+    margin-top: 10px;
+  }
+  .app[data-page="広場"][data-reader="true"] .plaza-companions .companion {
+    height: 130px;
+    width: 65px;
+  }
+}
+.now-card:has(.task-done) h2 {
+  padding-right: 65px;
+}
+.task-done {
+  min-height: 42px;
+}
+.task-done[aria-pressed="true"] {
+  color: #2e8052;
+  background: #dfefda;
+  border-radius: 20px;
+  padding: 6px 10px;
+}
+.task-done[aria-pressed="true"] svg {
+  fill: #c2e2bb;
+}
+.time-inputs input,.schedule-date input{min-width:0}.modal .close{min-width:40px;min-height:40px;display:grid;place-items:center}.feeling-option{min-width:0}
+@media(max-width:360px){.composer-sheet .feeling-option small{font-size:8px}}
