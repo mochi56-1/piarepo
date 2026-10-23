@@ -2010,3 +2010,17 @@ main {
 }
 .google-calendar-export { border-top: 1px solid #d9e9e3; padding-top: 16px; margin-top: 18px; }
 .planner-task-actions p { flex-basis: 100%; }
+
+.reactions .stamp-more {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; border: 1px dashed #9abcb2;
+  border-radius: 50%; background: #f2faf7; color: #326455;
+}
+.extra-stamp-picker {
+  flex-basis: 100%; min-width: 0; padding: 12px;
+  border: 1px solid #c8e0d6; border-radius: 16px; background: #f4fbf7;
+}
+.extra-stamp-picker p { font-size: 12px; margin: 0 0 10px; color: #526e63; }
+.extra-stamp-picker > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.extra-stamp-picker .picker-stamp { min-height: 44px; }
+.extra-stamp-picker .picker-stamp .stamp-label { display: inline; white-space: normal; }

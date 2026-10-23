@@ -1,5 +1,5 @@
-import React from "react";
-import { ChevronLeft, ChevronRight, Sprout, X } from "lucide-react";
+import React, { useState } from "react";
+import { ChevronLeft, ChevronRight, Sprout, X, Plus } from "lucide-react";
 
 export const stampOptions = [
   { key: "seen", emoji: "👀", label: "見たよ" },
@@ -8,6 +8,59 @@ export const stampOptions = [
   { key: "heart", emoji: "💛", label: "いいね" },
   { key: "empathy", emoji: "🥺", label: "わかるよ" },
 ];
+export const extraStampOptions = [
+  { key: "thanks", emoji: "🙏", label: "ありがとう" },
+  { key: "cheer", emoji: "📣", label: "応援してる" },
+  { key: "rest", emoji: "🌙", label: "ゆっくり休んでね" },
+  { key: "flower", emoji: "💐", label: "おつかれさま" },
+  { key: "clap", emoji: "👏", label: "拍手" },
+  { key: "warm", emoji: "☀️", label: "あたたかい気持ち" },
+  { key: "celebrate", emoji: "🎉", label: "おめでとう" },
+  { key: "listen", emoji: "👂", label: "聞いているよ" },
+];
+
+export function StampReactions({ note, onReact, children }) {
+  const [expanded, setExpanded] = useState(false);
+  const counts = getStamps(note), mine = getMyStamps(note);
+  const button = (stamp, picker = false) => (
+    <button
+      type="button"
+      key={stamp.key}
+      aria-label={stamp.label}
+      title={stamp.label}
+      aria-pressed={!!mine[stamp.key]}
+      className={`stamp ${mine[stamp.key] ? "selected-stamp" : ""} ${picker ? "picker-stamp" : ""}`}
+      onClick={() => onReact(note, stamp.key)}
+    >
+      <span className="stamp-emoji" aria-hidden="true">{stamp.emoji}</span>
+      <span>{counts[stamp.key] || 0}</span>
+      <span className="stamp-label">{stamp.label}</span>
+    </button>
+  );
+  return (
+    <div className="reactions stamp-reactions" onClick={e => e.stopPropagation()} onKeyDown={e => {
+      if (e.key === "Escape" && expanded) {
+        e.stopPropagation();
+        setExpanded(false);
+        e.currentTarget.querySelector('.stamp-more')?.focus();
+      }
+    }}>
+      {stampOptions.map(stamp => button(stamp))}
+      {!expanded && extraStampOptions.filter(stamp => counts[stamp.key] > 0 || mine[stamp.key]).map(stamp => button(stamp))}
+      <button type="button" className="stamp-more" aria-label={expanded ? "追加スタンプを閉じる" : "もっとスタンプを選ぶ"} aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+        {expanded ? <X size={19} /> : <Plus size={19} />}
+      </button>
+      {children}
+      {expanded && (
+        <div className="extra-stamp-picker" role="group" aria-label="追加スタンプ">
+          <p>気持ちに合うスタンプを選んでね。もう一度押すと取り消せます。</p>
+          <div>{extraStampOptions.map(stamp => button(stamp, true))}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export const getStamps = (note) =>
   note.stamps || {
     hug: 0,

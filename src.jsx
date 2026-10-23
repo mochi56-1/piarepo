@@ -39,7 +39,7 @@ import {
   Comments,
   Reflections,
   Friends,
-  stampOptions,
+  StampReactions,
   getStamps,
   getMyStamps,
   noteTitle,
@@ -661,25 +661,7 @@ function App() {
           {(note.title || !note.body) && <h2>{noteTitle(note)}</h2>}
           <p>{note.body}</p>
           {note.visibility === "public" ? (
-            <div className="reactions stamp-reactions">
-              {stampOptions.map((stamp) => (
-                <button
-                  key={stamp.key}
-                  aria-label={stamp.label}
-                  title={stamp.label}
-                  aria-pressed={!!getMyStamps(note)[stamp.key]}
-                  className={
-                    getMyStamps(note)[stamp.key]
-                      ? "stamp selected-stamp"
-                      : "stamp"
-                  }
-                  onClick={() => reactTo(note, stamp.key)}
-                >
-                  <span className="stamp-emoji">{stamp.emoji}</span>
-                  <span>{getStamps(note)[stamp.key] || 0}</span>
-                  <span className="stamp-label">{stamp.label}</span>
-                </button>
-              ))}
+            <StampReactions key={note.id} note={note} onReact={reactTo}>
               <button
                 aria-label="コメントを見る"
                 onClick={() => openDetail(note)}
@@ -687,7 +669,7 @@ function App() {
                 <MessageCircle size={20} />
                 <span>{note.comments.length}</span>
               </button>
-            </div>
+            </StampReactions>
           ) : (
             <span className="private-label">
               <LockKeyhole size={13} />
