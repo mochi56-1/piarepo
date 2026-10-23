@@ -11,6 +11,7 @@ import {
   MapPin,
   ArrowUpRight,
 } from "lucide-react";
+import { googleCalendarUrl } from "./googleCalendar.js";
 import LoginBonus from "./LoginBonus.jsx";
 import Character from "./Character.jsx";
 import useDialogFocus from "./useDialogFocus.js";
@@ -430,7 +431,7 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
             ) : (
               <>
                 <p className="planner-hint">
-                  タスクを押すと名前やピンの位置を変更できます。
+                  タスクを押すと、完了・予定への追加・編集ができます。完了したタスクはリストから戻せます。
                 </p>
                 {map()}
                 {!data.tasks.some((t) => !t.done) && (
@@ -608,6 +609,22 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
                   <span className="pin-coordinate">
                     負担 {x} / 大切さ {100 - y}
                   </span>
+                  {modal.id && (
+                    <div className="planner-task-actions">
+                      <button type="button" onClick={() => {
+                        if (persist({ ...data, tasks: data.tasks.map(t => t.id === modal.id ? { ...t, done: !t.done } : t) })) setModal(null);
+                      }}>
+                        <Check size={17} />
+                        {data.tasks.find(t => t.id === modal.id)?.done ? "未完了に戻す" : "完了にする"}
+                      </button>
+                      {!data.tasks.find(t => t.id === modal.id)?.done && (
+                        <button type="button" onClick={() => openEvent(null, data.tasks.find(t => t.id === modal.id))}>
+                          <CalendarDays size={17} />予定に入れる
+                        </button>
+                      )}
+                      <p className="planner-hint">完了しても、すでに作成した予定は残ります。これらの操作では編集中の変更は保存されません。</p>
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
@@ -653,6 +670,18 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
                 保存
               </button>
             </form>
+            {modal.type === "event" && modal.id && (() => {
+              const saved = data.events.find(event => event.id === modal.id);
+              const url = saved && googleCalendarUrl(saved);
+              return url ? (
+                <div className="google-calendar-export">
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                    <CalendarDays size={18} />Googleカレンダーに追加
+                  </a>
+                  <p className="planner-hint">保存済みの予定を日本時間で開きます。変更した場合は先に保存してください。Googleの画面で「保存」すると追加されます。自動同期はせず、繰り返し追加すると重複する場合があります。</p>
+                </div>
+              ) : null;
+            })()}
           </section>
         </div>
       )}
