@@ -1,3 +1,5 @@
+import AccountCloud from "./AccountCloud.jsx";
+import CloudFriends from "./CloudFriends.jsx";
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -294,8 +296,10 @@ function Calendar({
     </section>
   );
 }
-function App() {
-  const [notes, setNotes] = useState(loadNotes),
+function App({ cloud = null }) {
+  const [notes, setNotes] = useState(() =>
+      cloud ? cloud.initial.notes : loadNotes(),
+    ),
     [page, setPage] = useState(initialPage);
   const [selected, setSelected] = useState(today),
     [month, setMonth] = useState(
@@ -320,7 +324,13 @@ function App() {
     [reflection, setReflection] = useState(""),
     [weekOffset, setWeekOffset] = useState(0),
     [writingPrompt, setWritingPrompt] = useState(""),
-    [friendsOpen, setFriendsOpen] = useState(false);
+    [friendsOpen, setFriendsOpen] = useState(() => {
+      try {
+        return !!cloud && !!sessionStorage.getItem("piarepo-friend-invite");
+      } catch {
+        return false;
+      }
+    });
   const [notificationsEnabled, setNotificationsEnabled] = useState(() =>
     readSetting("piarepo-notifications", true),
   );
@@ -349,6 +359,7 @@ function App() {
     ),
     [readingIndex, setReadingIndex] = useState(0);
   const [plannerData, setPlannerData] = useState(() => {
+    if (cloud) return cloud.initial.planner;
     try {
       return loadPlanner(localStorage);
     } catch {
@@ -356,6 +367,11 @@ function App() {
     }
   });
   const savePlanner = (next) => {
+    if (cloud) {
+      if (!cloud.persist("planner", next)) return false;
+      setPlannerData(next);
+      return true;
+    }
     try {
       localStorage.setItem(plannerKey, JSON.stringify(next));
       setPlannerData(next);
@@ -399,6 +415,12 @@ function App() {
     if (readingIndex > publicNotes.length) setReadingIndex(publicNotes.length);
   }, [readingIndex, publicNotes.length]);
   const change = (next) => {
+    if (cloud) {
+      if (!cloud.persist("notes", next)) return false;
+      setNotes(next);
+      setError("");
+      return true;
+    }
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setNotes(next);
@@ -1153,13 +1175,23 @@ function App() {
                           />
                           <Trees size={17} />
                           <span>
-                            <b>広場にも置く</b>
-                            <small>誰かの気持ちに、そっと寄り添う。</small>
+                            <b>
+                              {cloud
+                                ? "自分の広場表示にも置く"
+                                : "広場にも置く"}
+                            </b>
+                            <small>
+                              {cloud
+                                ? "まだ他の人には共有されません。"
+                                : "誰かの気持ちに、そっと寄り添う。"}
+                            </small>
                           </span>
                         </label>
                       </fieldset>
                       <p className="muted">
-                        今はこのブラウザ内だけに保存されます。広場への反映も、この端末内のお試し表示です。
+                        {cloud
+                          ? "記録と写真は自分のアカウントに保存します。広場は自分だけのお試し表示で、友達にもまだ配信されません。"
+                          : "今はこのブラウザ内だけに保存されます。広場への反映も、この端末内のお試し表示です。"}
                       </p>
                       <button
                         className="primary submit"
@@ -1304,7 +1336,13 @@ function App() {
                       className="friend-stat"
                       onClick={() => setFriendsOpen(true)}
                     >
-                      <b>{friends.length}</b>つながりを見る
+                      {cloud ? (
+                        "友達・QRコード"
+                      ) : (
+                        <>
+                          <b>{friends.length}</b>つながりを見る
+                        </>
+                      )}
                     </button>
                     <div>
                       <b>{own.reduce((sum, n) => sum + n.likes, 0)}</b>いいね
@@ -1349,11 +1387,15 @@ function App() {
                       お知らせを表示する
                     </label>
                     <p>
-                      note・タスク・予定はこのブラウザに保存されています。ログインで同期するのはコインだけです。
+                      {cloud
+                        ? "記録は自分のアカウントに保存されています。友達にも自動では公開されません。"
+                        : "記録はこのブラウザに保存されています。"}
                     </p>
                   </section>
                   <BackupTools notes={notes} onRestore={change} />
-                  <p><a href="/privacy.html">プライバシーポリシー</a></p>
+                  <p>
+                    <a href="/privacy.html">プライバシーポリシー</a>
+                  </p>
                   <h3>
                     わたしの記録 <small>日付の新しい順</small>
                   </h3>
@@ -1465,7 +1507,10 @@ function App() {
           </button>
         ))}
       </nav>
-      {friendsOpen && (
+      {friendsOpen && cloud && (
+        <CloudFriends onClose={() => setFriendsOpen(false)} />
+      )}
+      {friendsOpen && !cloud && (
         <Friends
           friends={friends}
           onClose={() => setFriendsOpen(false)}
@@ -1621,6 +1666,15 @@ function App() {
 }
 createRoot(document.getElementById("root")).render(
   <BonusProvider>
-    <App />
+    <AccountCloud
+      loadLegacy={() => ({
+        notes: loadNotes()
+          .filter((n) => n.name === "あなた")
+          .map((n) => ({ ...n, visibility: "private" })),
+        planner: loadPlanner(localStorage),
+      })}
+    >
+      {(cloud) => <App key={cloud?.key || "local"} cloud={cloud} />}
+    </AccountCloud>
   </BonusProvider>,
 );

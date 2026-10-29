@@ -1992,8 +1992,13 @@ main {
   font-weight: 600;
   cursor: pointer;
 }
-.bonus-google:hover:not(:disabled) { background: #f0faf7; }
-.bonus-google:disabled { opacity: .6; cursor: wait; }
+.bonus-google:hover:not(:disabled) {
+  background: #f0faf7;
+}
+.bonus-google:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
 .bonus-login-divider {
   margin: 14px 0;
   text-align: center;
@@ -2001,26 +2006,173 @@ main {
   font-size: 12px;
 }
 
-.planner-task-actions { margin: 14px 0; display: flex; flex-wrap: wrap; gap: 10px; }
-.planner-task-actions button, .google-calendar-export a {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px 16px; min-height: 44px; border: 1px solid #accbc2;
-  border-radius: 12px; background: #f0faf7; color: #235d4f;
-  font: inherit; text-decoration: none; cursor: pointer;
+.planner-task-actions {
+  margin: 14px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-.google-calendar-export { border-top: 1px solid #d9e9e3; padding-top: 16px; margin-top: 18px; }
-.planner-task-actions p { flex-basis: 100%; }
+.planner-task-actions button,
+.google-calendar-export a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  min-height: 44px;
+  border: 1px solid #accbc2;
+  border-radius: 12px;
+  background: #f0faf7;
+  color: #235d4f;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.google-calendar-export {
+  border-top: 1px solid #d9e9e3;
+  padding-top: 16px;
+  margin-top: 18px;
+}
+.planner-task-actions p {
+  flex-basis: 100%;
+}
 
 .reactions .stamp-more {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 44px; min-height: 44px; border: 1px dashed #9abcb2;
-  border-radius: 50%; background: #f2faf7; color: #326455;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px dashed #9abcb2;
+  border-radius: 50%;
+  background: #f2faf7;
+  color: #326455;
 }
 .extra-stamp-picker {
-  flex-basis: 100%; min-width: 0; padding: 12px;
-  border: 1px solid #c8e0d6; border-radius: 16px; background: #f4fbf7;
+  flex-basis: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #c8e0d6;
+  border-radius: 16px;
+  background: #f4fbf7;
 }
-.extra-stamp-picker p { font-size: 12px; margin: 0 0 10px; color: #526e63; }
-.extra-stamp-picker > div { display: flex; flex-wrap: wrap; gap: 8px; }
-.extra-stamp-picker .picker-stamp { min-height: 44px; }
-.extra-stamp-picker .picker-stamp .stamp-label { display: inline; white-space: normal; }
+.extra-stamp-picker p {
+  font-size: 12px;
+  margin: 0 0 10px;
+  color: #526e63;
+}
+.extra-stamp-picker > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.extra-stamp-picker .picker-stamp {
+  min-height: 44px;
+}
+.extra-stamp-picker .picker-stamp .stamp-label {
+  display: inline;
+  white-space: normal;
+}
+
+.cloud-gate {
+  max-width: 620px;
+  margin: 24px auto;
+  padding: 24px;
+}
+.cloud-status,
+.cloud-import {
+  position: relative;
+  z-index: 5;
+  padding: 12px 20px;
+  background: #e5f5ed;
+  color: #254e40;
+}
+.cloud-import {
+  background: #fff5db;
+}
+.cloud-import button,
+.cloud-save-shield button,
+.cloud-friends button:not(.close),
+.cloud-gate button {
+  padding: 10px 14px;
+  margin: 4px;
+  min-height: 44px;
+  border: 1px solid #a9cbbd;
+  border-radius: 10px;
+  background: white;
+  color: #254e40;
+  cursor: pointer;
+  font: inherit;
+}
+.cloud-save-shield {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #233b3b80;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+.cloud-save-shield section {
+  max-width: 560px;
+  padding: 24px;
+  border-radius: 20px;
+  background: white;
+}
+.cloud-friends .friend-row {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.friend-qr {
+  display: block;
+  max-width: 100%;
+  width: 280px;
+  height: auto;
+  margin: 12px auto;
+}
+.friend-invite-url {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  user-select: all;
+}
+.friend-confirm {
+  padding: 16px;
+  background: #edf8f0;
+  border-radius: 12px;
+}
+.cloud-friends input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  font: inherit;
+  box-sizing: border-box;
+}
+.cloud-status button,
+.cloud-restore {
+  padding: 6px 10px;
+  margin: 4px;
+  border: 1px solid #9dbdad;
+  border-radius: 8px;
+  background: white;
+  font: inherit;
+  cursor: pointer;
+  display: inline-block;
+}
+.cloud-restore input {
+  display: block;
+  max-width: 220px;
+  font-size: 12px;
+}
+@media (min-width: 1181px) {
+  .cloud-status,
+  .cloud-import {
+    margin-left: max(238px, calc(50vw - 562px));
+    margin-right: max(0px, calc(50vw - 800px));
+  }
+}
+@media (min-width: 651px) and (max-width: 1180px) {
+  .cloud-status,
+  .cloud-import {
+    margin-left: 195px;
+  }
+}

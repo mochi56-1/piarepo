@@ -11,6 +11,7 @@ import { bonusClient, bonusConfigError } from "./bonusClient.js";
 import { readDemoBonus, claimDemoBonus, demoBonusKey } from "./bonus.js";
 import useDialogFocus from "./useDialogFocus.js";
 const BonusContext = createContext(null);
+export const useBonusAccount = () => useContext(BonusContext);
 export function BonusProvider({ children }) {
   const [session, setSession] = useState(null),
     [authLoading, setAuthLoading] = useState(!!bonusClient),
@@ -302,7 +303,7 @@ function LoginForm() {
         {sending ? "送信中…" : "ログインメールを送る"}
       </button>
       <p>
-        初めての場合はアカウントを作成します。このログインはコイン用です。note・タスク・予定はまだアカウント別には分かれず、このブラウザ内に残ります。
+        初めての場合はアカウントを作成します。note・タスク・予定・コインを自分のアカウントで利用できます。
       </p>
     </form>
   );
@@ -399,7 +400,7 @@ export default function LoginBonus({ compact = false }) {
           )}
           {bonus.configured && (
             <p className="bonus-hint">
-              同期するのはコインだけです。note・タスク・予定はアカウント別には分かれず、このブラウザ内に残ります。
+              note・タスク・予定・コインは、自分のアカウントに保存します。友達になっても記録は自動では公開されません。
             </p>
           )}
           <details className="bonus-rules">
@@ -428,7 +429,7 @@ export default function LoginBonus({ compact = false }) {
               className="modal bonus-auth-modal"
               role="dialog"
               aria-modal="true"
-              aria-label="コイン用のログイン"
+              aria-label="ぴあれぽのログイン"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 if (e.key === "Escape") setLoginOpen(false);
@@ -441,7 +442,7 @@ export default function LoginBonus({ compact = false }) {
               >
                 <X />
               </button>
-              <h2>コインを、アカウントに。</h2>
+              <h2>自分の記録を、アカウントに。</h2>
               <p className="muted">iPhoneとPCで同じ累計を使えます。</p>
               <LoginForm />
               {bonus.message && (
