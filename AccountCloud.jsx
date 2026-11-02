@@ -27,6 +27,23 @@ export function downloadRecords(document) {
 }
 export default function AccountCloud({ children, loadLegacy }) {
   const account = useBonusAccount();
+  const [guest, setGuest] = useState(() => {
+    try {
+      return sessionStorage.getItem("piarepo-guest") === "yes";
+    } catch {
+      return false;
+    }
+  });
+  const chooseGuest = (enabled) => {
+    setGuest(enabled);
+    try {
+      if (enabled) sessionStorage.setItem("piarepo-guest", "yes");
+      else sessionStorage.removeItem("piarepo-guest");
+    } catch {}
+  };
+  useEffect(() => {
+    if (account.session) chooseGuest(false);
+  }, [account.session?.user?.id]);
   useEffect(() => {
     const token = new URLSearchParams(location.search).get("friend");
     if (token && /^[0-9a-f-]{36}$/i.test(token)) {
@@ -39,6 +56,21 @@ export default function AccountCloud({ children, loadLegacy }) {
     }
   }, []);
   if (!bonusClient && !bonusConfigError) return children(null);
+  if (!account.session && guest && !account.authLoading)
+    return (
+      <>
+        <aside className="cloud-status guest-status">
+          <b>ゲストで利用中</b>
+          <p>
+            記録はこのブラウザだけに保存されます。共用端末では同じブラウザの人が閲覧できます。サイトデータを削除すると記録も消えます。
+          </p>
+          <button onClick={() => chooseGuest(false)}>
+            ログイン・アカウント作成
+          </button>
+        </aside>
+        {children(null, true)}
+      </>
+    );
   if (bonusConfigError)
     return (
       <main className="cloud-gate">
@@ -53,8 +85,16 @@ export default function AccountCloud({ children, loadLegacy }) {
       <main className="cloud-gate">
         <h1>ぴあれぽ</h1>
         <p>
-          自分の記録を開くにはログインしてください。招待リンクから来た方も、ログイン後に友達申請できます。
+          ログインなしでも記録を始められます。アカウントの記録を開く方、招待リンクから友達申請する方はログインしてください。
         </p>
+        <section className="guest-entry">
+          <button className="primary" onClick={() => chooseGuest(true)}>
+            ログインせずに使う
+          </button>
+          <p>
+            note・タスク・予定を、このブラウザに保存して使えます。友達申請と端末間の同期にはログインが必要です。
+          </p>
+        </section>
         <LoginBonus />
         <a href="/privacy.html">プライバシーポリシー</a>
       </main>

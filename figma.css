@@ -2176,3 +2176,49 @@ main {
     margin-left: 195px;
   }
 }
+
+.profile-stats .friend-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 86px;
+  padding: 12px 10px;
+  border-radius: 16px;
+  border: 1px solid #86b9ad;
+  background: #d9f1e9;
+  color: #245d50;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #aacfc1;
+}
+.profile-stats .friend-stat:hover {
+  background: #c4e8dc;
+}
+.profile-stats .friend-stat:focus-visible {
+  outline: 3px solid #287966;
+  outline-offset: 3px;
+}
+.profile-stats .friend-stat:active {
+  box-shadow: none;
+  transform: translateY(2px);
+}
+.guest-entry {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #9fcabc;
+  border-radius: 16px;
+  background: #e3f5ed;
+}
+.guest-entry p,
+.guest-status p {
+  font-size: 13px;
+  line-height: 1.7;
+}
+.cloud-gate .guest-entry .primary {
+  background: #328678;
+  color: white;
+  font-weight: 700;
+}

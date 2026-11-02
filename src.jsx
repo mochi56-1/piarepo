@@ -26,6 +26,7 @@ import {
   ListTodo,
   Clock3,
   Smile,
+  QrCode,
 } from "lucide-react";
 import "./style.css";
 import LoginBonus, { BonusProvider } from "./LoginBonus.jsx";
@@ -296,9 +297,13 @@ function Calendar({
     </section>
   );
 }
-function App({ cloud = null }) {
+function App({ cloud = null, guest = false }) {
   const [notes, setNotes] = useState(() =>
-      cloud ? cloud.initial.notes : loadNotes(),
+      cloud
+        ? cloud.initial.notes
+        : guest
+          ? loadNotes().filter((n) => n.name === "あなた")
+          : loadNotes(),
     ),
     [page, setPage] = useState(initialPage);
   const [selected, setSelected] = useState(today),
@@ -1336,7 +1341,8 @@ function App({ cloud = null }) {
                       className="friend-stat"
                       onClick={() => setFriendsOpen(true)}
                     >
-                      {cloud ? (
+                      <QrCode size={22} aria-hidden="true" />
+                      {cloud || guest ? (
                         "友達・QRコード"
                       ) : (
                         <>
@@ -1510,7 +1516,31 @@ function App({ cloud = null }) {
       {friendsOpen && cloud && (
         <CloudFriends onClose={() => setFriendsOpen(false)} />
       )}
-      {friendsOpen && !cloud && (
+      {friendsOpen && guest && (
+        <div className="overlay" onClick={() => setFriendsOpen(false)}>
+          <section
+            className="modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="友達機能のログイン"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="close"
+              aria-label="友達画面を閉じる"
+              onClick={() => setFriendsOpen(false)}
+            >
+              <X />
+            </button>
+            <h2>友達・QRコード</h2>
+            <p>
+              友達申請やQRコードの表示にはログインが必要です。ゲストの記録は、ログイン後に確認して取り込めます。
+            </p>
+            <LoginBonus />
+          </section>
+        </div>
+      )}
+      {friendsOpen && !cloud && !guest && (
         <Friends
           friends={friends}
           onClose={() => setFriendsOpen(false)}
@@ -1674,7 +1704,13 @@ createRoot(document.getElementById("root")).render(
         planner: loadPlanner(localStorage),
       })}
     >
-      {(cloud) => <App key={cloud?.key || "local"} cloud={cloud} />}
+      {(cloud, guest = false) => (
+        <App
+          key={cloud?.key || (guest ? "guest" : "local")}
+          cloud={cloud}
+          guest={guest}
+        />
+      )}
     </AccountCloud>
   </BonusProvider>,
 );
