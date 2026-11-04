@@ -1,3 +1,6 @@
+import FriendPlaza from "./FriendPlaza.jsx";
+import NoteWizard from "./NoteWizard.jsx";
+import { selectedFeeling } from "./feelings.js";
 import AccountCloud from "./AccountCloud.jsx";
 import CloudFriends from "./CloudFriends.jsx";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,12 +19,9 @@ import {
   ChevronRight,
   MoreHorizontal,
   BookOpen,
-  ImagePlus,
   LockKeyhole,
   Trees,
   Check,
-  Mic,
-  Square,
   Home,
   ListTodo,
   Clock3,
@@ -34,6 +34,7 @@ import Character from "./Character.jsx";
 import PlanningViews from "./PlanningViews.jsx";
 import { loadPlanner, plannerKey } from "./planner.js";
 import "./figma.css";
+import "./figma-update.css";
 import useDialogFocus from "./useDialogFocus.js";
 import BackupTools from "./BackupTools.jsx";
 import useSpeechInput from "./useSpeechInput.jsx";
@@ -117,11 +118,11 @@ function Face({ level, size = 22 }) {
     </svg>
   );
 }
-function Mood({ level }) {
+function Mood({ level, feeling }) {
   return (
     <span className={`mood ${moodColors[level - 1]}`}>
       <Face level={level} size={19} />
-      {moodLabels[level - 1]}
+      {typeof feeling === "string" ? feeling : moodLabels[level - 1]}
     </span>
   );
 }
@@ -225,8 +226,7 @@ function Calendar({
   const year = month.getFullYear(),
     m = month.getMonth();
   const days = new Date(year, m + 1, 0).getDate(),
-    offset = new Date(year, m, 1).getDay();
-  const marked = new Set(notes.map((n) => n.date));
+    offset = (new Date(year, m, 1).getDay() + 6) % 7;
   const dailyMoods = new Map();
   notes.forEach((n) => {
     if (!dailyMoods.has(n.date)) dailyMoods.set(n.date, n.mood);
@@ -241,7 +241,8 @@ function Calendar({
           <ChevronLeft size={compact ? 16 : 22} />
         </button>
         <h2>
-          {year}年 {m + 1}月
+          <span className="calendar-month-number">{m + 1}</span>
+          <span className="calendar-year">{year}</span>
         </h2>
         <button
           aria-label="次の月"
@@ -251,7 +252,7 @@ function Calendar({
         </button>
       </div>
       <div className="calendar-grid">
-        {"日月火水木金土".split("").map((d) => (
+        {"月火水木金土日".split("").map((d) => (
           <span key={d}>{d}</span>
         ))}
         {Array.from({ length: offset }, (_, i) => (
@@ -267,8 +268,16 @@ function Calendar({
               className={`${key === selected ? "today" : ""} ${key === today() ? "current-day" : ""} ${dailyMoods.has(key) ? "mood-day " + moodColors[dailyMoods.get(key) - 1] : ""}`}
               onClick={() => onSelect(key)}
             >
-              {i + 1}
-              {marked.has(key) && <i />}
+              <span className="calendar-day-number">{i + 1}</span>
+              <span
+                className={`calendar-mood-face ${dailyMoods.has(key) ? moodColors[dailyMoods.get(key) - 1] : "unrecorded"}`}
+              >
+                {dailyMoods.has(key) ? (
+                  <Face level={dailyMoods.get(key)} size={25} />
+                ) : (
+                  <span>·</span>
+                )}
+              </span>
             </button>
           );
         })}
@@ -314,6 +323,7 @@ function App({ cloud = null, guest = false }) {
     [notice, setNotice] = useState(false),
     [comment, setComment] = useState("");
   const [level, setLevel] = useState(3),
+    [feeling, setFeeling] = useState("まあまあ"),
     [title, setTitle] = useState(""),
     [body, setBody] = useState(""),
     [noteDate, setNoteDate] = useState(today);
@@ -328,7 +338,6 @@ function App({ cloud = null, guest = false }) {
     [menuId, setMenuId] = useState(null),
     [reflection, setReflection] = useState(""),
     [weekOffset, setWeekOffset] = useState(0),
-    [writingPrompt, setWritingPrompt] = useState(""),
     [friendsOpen, setFriendsOpen] = useState(() => {
       try {
         return !!cloud && !!sessionStorage.getItem("piarepo-friend-invite");
@@ -358,6 +367,7 @@ function App({ cloud = null, guest = false }) {
           ? "friends"
           : null,
   );
+  const [friendsRevision, setFriendsRevision] = useState(0);
   const [calendarDayOpen, setCalendarDayOpen] = useState(false);
   const [plazaMode, setPlazaMode] = useState(() =>
       window.matchMedia("(max-width:650px)").matches ? "reader" : "list",
@@ -454,6 +464,15 @@ function App({ cloud = null, guest = false }) {
     setSuccess("");
   };
   const openNote = (date = page === "カレンダー" ? selected : today()) => {
+    if (editingId !== null) {
+      setEditingId(null);
+      setTitle("");
+      setBody("");
+      setImage("");
+      setLevel(3);
+      setFeeling("まあまあ");
+      setVisibility("private");
+    }
     setNoteDate(date);
     setEditorOpen(true);
     setMenuId(null);
@@ -465,8 +484,15 @@ function App({ cloud = null, guest = false }) {
     setTitle(note.title);
     setBody(note.body);
     setLevel(note.mood);
+    setFeeling(selectedFeeling(note.feeling, note.mood));
     setImage(note.image || "");
-    setVisibility(note.visibility);
+    setVisibility(
+      cloud
+        ? note.shareToFriends === true
+          ? "public"
+          : "private"
+        : note.visibility,
+    );
     setNoteDate(note.date);
     setMenuId(null);
     setEditorOpen(true);
@@ -477,12 +503,41 @@ function App({ cloud = null, guest = false }) {
     setEditorOpen(false);
   };
   const toggleVisibility = (note) => {
+    if (cloud && !cloud.sharingReady) {
+      setError(
+        "友達共有の設定が完了していません。今は自分だけの記録として保存できます。",
+      );
+      return;
+    }
+    if (
+      cloud &&
+      note.shareToFriends &&
+      !window.confirm(
+        "自分だけの記録に戻しますか？公開側のスタンプとコメントは削除され、再公開しても戻りません。",
+      )
+    )
+      return;
+    if (
+      cloud &&
+      !note.shareToFriends &&
+      !window.confirm(
+        "このnoteの本文・気分・写真を承認済みの友達に公開しますか？編集履歴と自分への振り返りは公開しません。",
+      )
+    )
+      return;
     change(
       notes.map((n) =>
         n.id === note.id
           ? {
               ...n,
-              visibility: n.visibility === "public" ? "private" : "public",
+              visibility: cloud
+                ? n.shareToFriends
+                  ? "private"
+                  : "public"
+                : n.visibility === "public"
+                  ? "private"
+                  : "public",
+              shareToFriends: cloud ? !n.shareToFriends : false,
             }
           : n,
       ),
@@ -502,6 +557,12 @@ function App({ cloud = null, guest = false }) {
   const save = (event) => {
     event.preventDefault();
     if (imageLoading || speech.busy) return;
+    if (cloud && !cloud.sharingReady && visibility === "public") {
+      setError(
+        "共有状態を確認できません。「自分だけ」を選ぶか、再読み込みしてから保存してください。",
+      );
+      return;
+    }
     if (!body.trim() && !image) {
       setError("ひとこと書くか、写真を1枚添えてください。");
       return;
@@ -512,17 +573,19 @@ function App({ cloud = null, guest = false }) {
       ...(previous || {}),
       id: previous?.id || Date.now(),
       name: "あなた",
-      avatar: avatars[0],
+      avatar: "/images/fig-avatar.png",
       date: noteDate,
       time: now.toLocaleTimeString("ja-JP", {
         hour: "2-digit",
         minute: "2-digit",
       }),
       mood: level,
+      feeling,
       title: title.trim(),
       body: body.trim(),
       image,
       visibility,
+      shareToFriends: !!cloud?.sharingReady && visibility === "public",
       likes: previous?.likes || 0,
       comments: previous?.comments || [],
       reaction: previous?.reaction || 0,
@@ -536,6 +599,7 @@ function App({ cloud = null, guest = false }) {
           image: previous.image || "",
           date: previous.date,
           mood: previous.mood,
+          feeling: previous.feeling,
           editedAt: now.toISOString(),
         },
       ];
@@ -554,11 +618,11 @@ function App({ cloud = null, guest = false }) {
     setTitle("");
     setBody("");
     setLevel(3);
+    setFeeling("まあまあ");
     setImage("");
     setVisibility("private");
     setImageError("");
     setEditingId(null);
-    setWritingPrompt("");
     setEditorOpen(false);
     if (page !== "広場" || visibility !== "public") setPage("カレンダー");
     setSuccess(
@@ -656,7 +720,7 @@ function App({ cloud = null, guest = false }) {
             {shortDate(note.date)} {note.time}
           </small>
         </div>
-        <Mood level={note.mood} />
+        <Mood level={note.mood} feeling={note.feeling} />
         {note.name === "あなた" && (
           <div className="note-actions">
             <button
@@ -674,9 +738,13 @@ function App({ cloud = null, guest = false }) {
               <div className="note-menu">
                 <button onClick={() => editNote(note)}>noteを編集</button>
                 <button onClick={() => toggleVisibility(note)}>
-                  {note.visibility === "public"
-                    ? "自分だけに戻す"
-                    : "広場にも置く"}
+                  {cloud
+                    ? note.shareToFriends
+                      ? "自分だけに戻す"
+                      : "友達に見せる"
+                    : note.visibility === "public"
+                      ? "自分だけに戻す"
+                      : "広場にも置く"}
                 </button>
               </div>
             )}
@@ -687,7 +755,11 @@ function App({ cloud = null, guest = false }) {
         <div className="post-text">
           {(note.title || !note.body) && <h2>{noteTitle(note)}</h2>}
           <p>{note.body}</p>
-          {note.visibility === "public" ? (
+          {cloud && note.shareToFriends ? (
+            <button className="text-action" onClick={() => go("広場")}>
+              広場でスタンプとコメントを見る
+            </button>
+          ) : !cloud && note.visibility === "public" ? (
             <StampReactions key={note.id} note={note} onReact={reactTo}>
               <button
                 aria-label="コメントを見る"
@@ -767,7 +839,7 @@ function App({ cloud = null, guest = false }) {
           <span>ひとことから、はじめよう。</span>
         </div>
         <button className="account" onClick={() => go("マイページ")}>
-          <img src={avatars[0]} alt="" />
+          <img src="/images/fig-avatar.png" alt="" />
           <div>
             <b>あなた</b>
             <small>マイジャーナル</small>
@@ -803,7 +875,11 @@ function App({ cloud = null, guest = false }) {
               aria-label="マイページを開く"
               onClick={() => go("マイページ")}
             >
-              <img className="header-avatar" src={avatars[0]} alt="あなた" />
+              <img
+                className="header-avatar"
+                src="/images/fig-avatar.png"
+                alt="あなた"
+              />
             </button>
           </div>
           {notice && (
@@ -968,261 +1044,53 @@ function App({ cloud = null, guest = false }) {
                     >
                       <X />
                     </button>
-                    <form className="panel note-editor" onSubmit={save}>
-                      <div className="editor-intro">
-                        <BookOpen size={23} />
-                        <div>
-                          <h2>
-                            {editingId
-                              ? "noteを編集する"
-                              : "自分のための、note。"}
-                          </h2>
-                          <p>
-                            きれいにまとめなくても大丈夫。そのままの気持ちで。
-                          </p>
-                        </div>
-                      </div>
-                      <label htmlFor="note-date">記録する日</label>
-                      <input
-                        id="note-date"
-                        type="date"
-                        value={noteDate}
-                        required
-                        min="1900-01-01"
-                        max="9999-12-31"
-                        onChange={(e) => setNoteDate(e.target.value)}
-                      />
-                      <fieldset className="feeling-field">
-                        <legend>いまの気分</legend>
-                        <div className="feeling-scale">
-                          {moodLabels.map((text, i) => (
-                            <button
-                              type="button"
-                              key={text}
-                              aria-label={`気分${i + 1}：${text}`}
-                              aria-pressed={level === i + 1}
-                              className={`feeling-option ${moodColors[i]} ${level === i + 1 ? "chosen" : ""}`}
-                              onClick={() => setLevel(i + 1)}
-                            >
-                              <Face level={i + 1} size={37} />
-                              <span>{i + 1}</span>
-                              <small>{text}</small>
-                            </button>
-                          ))}
-                        </div>
-                      </fieldset>
-                      <details className="writing-prompts">
-                        <summary>書くことに迷ったら</summary>
-                        {[
-                          "いま、どんな気持ち？",
-                          "今日、目に留まったものは？",
-                          "自分にかけたい言葉は？",
-                        ].map((text) => (
-                          <button
-                            type="button"
-                            key={text}
-                            aria-pressed={writingPrompt === text}
-                            onClick={() => {
-                              setWritingPrompt(text);
-                              document.getElementById("body")?.focus();
-                            }}
-                          >
-                            {text}
-                          </button>
-                        ))}
-                      </details>
-                      <details
-                        className="optional-title"
-                        open={editingId ? true : undefined}
-                      >
-                        <summary>タイトルを付ける（任意）</summary>
-                        <label htmlFor="title">
-                          タイトル <small>任意</small>
-                        </label>
-                        <input
-                          id="title"
-                          maxLength={60}
-                          placeholder="今日の小さなできごとは？"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                        />
-                      </details>
-                      <div className="body-label">
-                        <label htmlFor="body">note</label>
-                        <button
-                          type="button"
-                          className={`voice-button ${speech.busy ? "recording" : ""}`}
-                          disabled={
-                            !speech.supported || speech.status === "stopping"
-                          }
-                          aria-pressed={speech.busy}
-                          onClick={speech.busy ? speech.stop : speech.start}
-                        >
-                          {speech.busy ? (
-                            <Square size={15} />
-                          ) : (
-                            <Mic size={17} />
-                          )}
-                          {
-                            {
-                              idle: "音声入力",
-                              starting: "開始中・停止する",
-                              listening: "音声入力を停止",
-                              stopping: "文字を確定中…",
-                            }[speech.status]
-                          }
-                        </button>
-                      </div>
-                      <textarea
-                        id="body"
-                        placeholder={
-                          writingPrompt ||
-                          "どんなことがあった？ ひとことでも、写真だけでも。"
-                        }
-                        value={body}
-                        onChange={(e) => setBody(e.target.value)}
-                        rows={5}
-                      />
-                      <div className="voice-feedback" aria-live="polite">
-                        {speech.busy && (
-                          <p className="voice-status" role="status">
-                            {speech.status === "stopping"
-                              ? "最後の言葉を確定しています…"
-                              : "日本語で話してください。確定した言葉を本文に追記します。"}
-                            {speech.interim && (
-                              <span className="voice-interim">
-                                聞き取り中：{speech.interim}
-                              </span>
-                            )}
-                          </p>
-                        )}
-                        {speech.error && (
-                          <p className="image-error" role="alert">
-                            {speech.error}
-                          </p>
-                        )}
-                      </div>
-                      <p className="voice-help">
-                        {speech.supported
-                          ? "音声入力にはマイクの許可が必要です。音声はブラウザの認識サービスで処理される場合があります。録音ファイルは保存しません。"
-                          : "この環境では音声入力を利用できません。対応するChromeやSafariなどでHTTPSのページを開くか、キーボードで入力してください。iPhoneでは本文をタップし、キーボードのマイクでも音声入力できます。"}
-                      </p>
-                      <div className="attachment">
-                        <input
-                          ref={fileInput}
-                          id="note-image"
-                          aria-label="画像を添付"
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp,image/gif"
-                          onChange={attach}
-                          hidden
-                        />
-                        <button
-                          type="button"
-                          className="attach-button"
-                          onClick={() => fileInput.current.click()}
-                          disabled={imageLoading}
-                        >
-                          <ImagePlus size={19} />
-                          {imageLoading
-                            ? "読み込み中…"
-                            : image
-                              ? "画像を変更"
-                              : "画像を添付"}
-                        </button>
-                        <span>1枚・2MBまで</span>
-                      </div>
-                      {imageError && (
-                        <p className="image-error" role="alert">
-                          {imageError}
-                        </p>
-                      )}
-                      {image && (
-                        <div className="attachment-preview">
-                          <img src={image} alt="添付画像のプレビュー" />
-                          <button
-                            type="button"
-                            aria-label="画像を削除"
-                            onClick={() => {
-                              imageRequest.current++;
-                              setImage("");
-                              setImageLoading(false);
-                              setImageError("");
-                            }}
-                          >
-                            <X size={18} />
-                          </button>
-                        </div>
-                      )}
-                      <fieldset className="visibility-field">
-                        <legend>このnoteの置き場所</legend>
-                        <label>
-                          <input
-                            type="radio"
-                            name="visibility"
-                            value="private"
-                            checked={visibility === "private"}
-                            onChange={() => setVisibility("private")}
-                          />
-                          <LockKeyhole size={17} />
-                          <span>
-                            <b>自分だけ</b>
-                            <small>自分のカレンダーに、そっと残す。</small>
-                          </span>
-                        </label>
-                        <label>
-                          <input
-                            type="radio"
-                            name="visibility"
-                            value="public"
-                            checked={visibility === "public"}
-                            onChange={() => setVisibility("public")}
-                          />
-                          <Trees size={17} />
-                          <span>
-                            <b>
-                              {cloud
-                                ? "自分の広場表示にも置く"
-                                : "広場にも置く"}
-                            </b>
-                            <small>
-                              {cloud
-                                ? "まだ他の人には共有されません。"
-                                : "誰かの気持ちに、そっと寄り添う。"}
-                            </small>
-                          </span>
-                        </label>
-                      </fieldset>
-                      <p className="muted">
-                        {cloud
-                          ? "記録と写真は自分のアカウントに保存します。広場は自分だけのお試し表示で、友達にもまだ配信されません。"
-                          : "今はこのブラウザ内だけに保存されます。広場への反映も、この端末内のお試し表示です。"}
-                      </p>
-                      <button
-                        className="primary submit"
-                        aria-label="noteを保存"
-                        disabled={imageLoading || speech.busy}
-                        type="submit"
-                      >
-                        <Check size={18} />
-                        {editingId ? "更新" : "記録"}
-                      </button>
-                      {error && (
-                        <p role="alert" className="image-error">
-                          {error}
-                        </p>
-                      )}
-                      <p className="muted">
-                        ひとことだけでも、写真だけでも。タイトルと文章は任意です。
-                      </p>
-                      <div className="composer-character">
-                        <Character bust />
-                      </div>
-                    </form>
+                    <NoteWizard
+                      editingId={editingId}
+                      wasShared={
+                        !!notes.find((n) => n.id === editingId)?.shareToFriends
+                      }
+                      level={level}
+                      feeling={feeling}
+                      onFeeling={(f) => {
+                        setLevel(f.mood);
+                        setFeeling(f.label);
+                      }}
+                      Face={Face}
+                      title={title}
+                      setTitle={setTitle}
+                      body={body}
+                      setBody={setBody}
+                      noteDate={noteDate}
+                      setNoteDate={setNoteDate}
+                      image={image}
+                      imageLoading={imageLoading}
+                      imageError={imageError}
+                      onAttach={attach}
+                      fileInput={fileInput}
+                      onRemove={() => {
+                        imageRequest.current++;
+                        setImage("");
+                        setImageLoading(false);
+                        setImageError("");
+                      }}
+                      visibility={visibility}
+                      setVisibility={setVisibility}
+                      cloud={cloud}
+                      speech={speech}
+                      error={error}
+                      onSave={save}
+                    />
                   </section>
                 </div>
               )}
-              {page === "広場" && (
+              {page === "広場" && cloud && (
+                <FriendPlaza
+                  ready={cloud.sharingReady}
+                  revision={`${cloud.revision}:${friendsRevision}`}
+                  onFriends={() => setFriendsOpen(true)}
+                />
+              )}
+              {page === "広場" && !cloud && (
                 <>
                   <div className="plaza-intro">
                     <Trees size={24} />
@@ -1329,7 +1197,7 @@ function App({ cloud = null, guest = false }) {
               )}
               {page === "マイページ" && (
                 <section className="panel profile">
-                  <img src={avatars[0]} alt="あなた" />
+                  <img src="/images/fig-avatar.png" alt="あなた" />
                   <h2>あなた</h2>
                   <p>わたしのペースで、日々をつづる。</p>
                   <LoginBonus />
@@ -1351,7 +1219,12 @@ function App({ cloud = null, guest = false }) {
                       )}
                     </button>
                     <div>
-                      <b>{own.reduce((sum, n) => sum + n.likes, 0)}</b>いいね
+                      <b>
+                        {cloud
+                          ? own.filter((n) => n.shareToFriends).length
+                          : own.reduce((sum, n) => sum + n.likes, 0)}
+                      </b>
+                      {cloud ? "友達へ公開" : "いいね"}
                     </div>
                   </div>
                   <button className="primary" onClick={() => openNote()}>
@@ -1394,7 +1267,7 @@ function App({ cloud = null, guest = false }) {
                     </label>
                     <p>
                       {cloud
-                        ? "記録は自分のアカウントに保存されています。友達にも自動では公開されません。"
+                        ? "記録は自分のアカウントに保存されています。「友達に見せる」を選んだnoteだけ、承認済みの友達へ公開します。"
                         : "記録はこのブラウザに保存されています。"}
                     </p>
                   </section>
@@ -1514,7 +1387,12 @@ function App({ cloud = null, guest = false }) {
         ))}
       </nav>
       {friendsOpen && cloud && (
-        <CloudFriends onClose={() => setFriendsOpen(false)} />
+        <CloudFriends
+          onClose={() => {
+            setFriendsOpen(false);
+            setFriendsRevision((n) => n + 1);
+          }}
+        />
       )}
       {friendsOpen && guest && (
         <div className="overlay" onClick={() => setFriendsOpen(false)}>
@@ -1578,10 +1456,21 @@ function App({ cloud = null, guest = false }) {
                   {shortDate(detail.date)} {detail.time}
                 </small>
               </div>
-              <Mood level={detail.mood} />
+              <Mood level={detail.mood} feeling={detail.feeling} />
             </div>
             {detail.title && <h2>{detail.title}</h2>}
             <p className="detail-body">{detail.body}</p>
+            {cloud && detail.shareToFriends && (
+              <button
+                className="text-action"
+                onClick={() => {
+                  setModal(null);
+                  go("広場");
+                }}
+              >
+                広場でスタンプとコメントを見る
+              </button>
+            )}
             {detail.image && (
               <img
                 className="detail-image"
@@ -1600,9 +1489,13 @@ function App({ cloud = null, guest = false }) {
                 <div className="detail-actions">
                   <button onClick={() => editNote(detail)}>noteを編集</button>
                   <button onClick={() => toggleVisibility(detail)}>
-                    {detail.visibility === "public"
-                      ? "自分だけに戻す"
-                      : "広場にも置く"}
+                    {cloud
+                      ? detail.shareToFriends
+                        ? "自分だけに戻す"
+                        : "友達に見せる"
+                      : detail.visibility === "public"
+                        ? "自分だけに戻す"
+                        : "広場にも置く"}
                   </button>
                 </div>
                 <Reflections
@@ -1652,7 +1545,7 @@ function App({ cloud = null, guest = false }) {
                 )}
               </>
             )}
-            {detail.visibility === "public" && (
+            {!cloud && detail.visibility === "public" && (
               <Comments
                 comments={detail.comments}
                 value={comment}

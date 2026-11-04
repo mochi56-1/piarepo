@@ -116,7 +116,8 @@ function AccountRecords({ userId, children, loadLegacy }) {
     [dirty, setDirty] = useState(false),
     [ready, setReady] = useState(false),
     [generation, setGeneration] = useState(0),
-    [skipped, setSkipped] = useState(false);
+    [skipped, setSkipped] = useState(false),
+    [sharingReady, setSharingReady] = useState(false);
   const state = useRef({ document: null, revision: 0 }),
     active = useRef(true),
     locked = useRef(false);
@@ -141,6 +142,9 @@ function AccountRecords({ userId, children, loadLegacy }) {
         .maybeSingle();
       if (error) throw error;
       if (!active.current) return;
+      const sharing = await bonusClient.rpc("friend_sharing_ready");
+      if (!active.current) return;
+      setSharingReady(!sharing.error && sharing.data === 1);
       const doc = data?.document || emptyRecords();
       validateAccountDocument(doc);
       state.current = { document: doc, revision: data?.revision || 0 };
@@ -261,7 +265,7 @@ function AccountRecords({ userId, children, loadLegacy }) {
           : dirty
             ? "未保存の変更があります"
             : "アカウントの記録を使用中"}{" "}
-        · コイン以外の記録も本人だけが閲覧できます
+        · 非公開の記録は本人だけが閲覧できます
         <button disabled={busy || dirty} onClick={load}>
           最新を読み込む
         </button>
@@ -288,7 +292,7 @@ function AccountRecords({ userId, children, loadLegacy }) {
                 if (!active.current || locked.current || dirty) return;
                 if (
                   !window.confirm(
-                    `note ${incoming.notes.length}件・タスク ${incoming.planner.tasks.length}件・予定 ${incoming.planner.events.length}件をこのアカウントへ取り込みますか？同じIDはクラウド側を優先し、既存の記録は削除しません。`,
+                    `note ${incoming.notes.length}件・タスク ${incoming.planner.tasks.length}件・予定 ${incoming.planner.events.length}件をこのアカウントへ取り込みますか？同じIDはクラウド側を優先し、既存の記録は削除しません。追加するnoteは自分だけに戻し、友達に自動公開しません。`,
                   )
                 )
                   return;
@@ -328,7 +332,13 @@ function AccountRecords({ userId, children, loadLegacy }) {
         </aside>
       )}
       <div inert={busy || dirty ? true : undefined} aria-busy={busy}>
-        {children({ initial, persist, key: `${userId}:${generation}` })}
+        {children({
+          initial,
+          persist,
+          sharingReady,
+          revision: state.current.revision,
+          key: `${userId}:${generation}`,
+        })}
       </div>
       {(busy || dirty) && (
         <div className="cloud-save-shield">

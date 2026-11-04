@@ -1,3 +1,4 @@
+import { feelings } from "./feelings.js";
 export function buildBackup(notes) {
   return {
     format: "piarepo-backup",
@@ -39,6 +40,12 @@ export function parseBackup(text) {
       note.mood < 1 ||
       note.mood > 5 ||
       !["private", "public"].includes(note.visibility) ||
+      (note.feeling != null &&
+        !feelings.some(
+          (f) => f.label === note.feeling && f.mood === note.mood,
+        )) ||
+      (note.shareToFriends != null &&
+        typeof note.shareToFriends !== "boolean") ||
       !Array.isArray(note.comments) ||
       note.comments.some(
         (c) => typeof c !== "string" && (!c || typeof c.text !== "string"),

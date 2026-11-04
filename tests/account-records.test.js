@@ -48,3 +48,18 @@ test("account import preserves existing IDs and refuses malformed planner data",
   incoming.planner.events[0].end = "07:00";
   assert.throws(() => mergeAccountDocuments(doc, incoming));
 });
+
+test("restoring additional notes never opts them into friend sharing", () => {
+  const empty = { notes: [], planner: { tasks: [], events: [] } };
+  const imported = structuredClone(doc);
+  imported.notes[0].shareToFriends = true;
+  imported.notes[0].visibility = "public";
+  const result = mergeAccountDocuments(empty, imported);
+  assert.equal(result.notes[0].shareToFriends, false);
+  assert.equal(result.notes[0].visibility, "private");
+  const current = structuredClone(imported);
+  assert.equal(
+    mergeAccountDocuments(current, imported).notes[0].shareToFriends,
+    true,
+  );
+});

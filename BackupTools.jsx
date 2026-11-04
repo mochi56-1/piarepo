@@ -105,7 +105,10 @@ export default function BackupTools({ notes, onRestore }) {
               <X />
             </button>
             <h2>バックアップを復元しますか？</h2>
-            <p>{preview.length}件の記録を読み込みます。</p>
+            <p>
+              {preview.length}
+              件の記録を読み込みます。取り込む記録は「自分だけ」に戻し、友達には自動公開しません。
+            </p>
             <p className="muted">
               同じIDの記録
               {
@@ -118,7 +121,18 @@ export default function BackupTools({ notes, onRestore }) {
             <button
               className="primary"
               onClick={() => {
-                if (onRestore(mergeBackup(notes, preview))) {
+                if (
+                  onRestore(
+                    mergeBackup(
+                      notes,
+                      preview.map((n) => ({
+                        ...n,
+                        shareToFriends: false,
+                        visibility: "private",
+                      })),
+                    ),
+                  )
+                ) {
                   setPreview(null);
                   setMessage("バックアップを復元しました。");
                 } else {

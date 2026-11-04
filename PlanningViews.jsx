@@ -10,13 +10,33 @@ import {
   Clock3,
   MapPin,
   ArrowUpRight,
+  Coins,
+  Palette,
 } from "lucide-react";
 import { googleCalendarUrl } from "./googleCalendar.js";
-import LoginBonus from "./LoginBonus.jsx";
+import LoginBonus, { useBonusAccount } from "./LoginBonus.jsx";
 import Character from "./Character.jsx";
 import useDialogFocus from "./useDialogFocus.js";
 import { dayKey, timeMinutes, validateEvent, layoutEvents } from "./planner.js";
 export default function PlanningViews({ page, go, data, onChange, onNote }) {
+  const bonus = useBonusAccount();
+  const [bonusOpen, setBonusOpen] = useState(false),
+    [roomOpen, setRoomOpen] = useState(false);
+  const [room, setRoom] = useState(() => {
+    try {
+      return ["mint", "sky", "cream"].includes(
+        localStorage.getItem("piarepo-room"),
+      )
+        ? localStorage.getItem("piarepo-room")
+        : "mint";
+    } catch {
+      return "mint";
+    }
+  });
+  const [roomError, setRoomError] = useState("");
+  useEffect(() => {
+    document.documentElement.dataset.room = room;
+  }, [room]);
   const [clock, setClock] = useState(() => new Date());
   const [view, setView] = useState("list"),
     [date, setDate] = useState(() => {
@@ -40,10 +60,22 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
     [taskId, setTaskId] = useState(null),
     [error, setError] = useState(""),
     [chooser, setChooser] = useState(false);
-  useDialogFocus(modal ? "planner-editor" : chooser ? "task-chooser" : null);
+  useDialogFocus(
+    modal
+      ? "planner-editor"
+      : chooser
+        ? "task-chooser"
+        : bonusOpen
+          ? "home-bonus"
+          : roomOpen
+            ? "room"
+            : null,
+  );
   useEffect(() => {
     setModal(null);
     setChooser(false);
+    setBonusOpen(false);
+    setRoomOpen(false);
     setError("");
   }, [page]);
   useEffect(() => {
@@ -278,6 +310,79 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
   const positioned = layoutEvents(dayEvents);
   return (
     <>
+      {(bonusOpen || roomOpen) && (
+        <div
+          className="overlay"
+          onClick={() => {
+            setBonusOpen(false);
+            setRoomOpen(false);
+          }}
+        >
+          <section
+            className="modal home-settings-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={bonusOpen ? "ログインボーナス" : "お部屋の色"}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setBonusOpen(false);
+                setRoomOpen(false);
+              }
+            }}
+          >
+            <button
+              className="close"
+              aria-label="ホームの設定を閉じる"
+              onClick={() => {
+                setBonusOpen(false);
+                setRoomOpen(false);
+              }}
+            >
+              <X />
+            </button>
+            {bonusOpen ? (
+              <LoginBonus />
+            ) : (
+              <>
+                <h2>お部屋の色</h2>
+                <p>好きな色を選んで、ひと息。この変更にコインは使いません。</p>
+                <div className="room-swatches">
+                  {[
+                    { key: "mint", name: "ミント", color: "#dff0ef" },
+                    { key: "sky", name: "あおぞら", color: "#dfeaf5" },
+                    { key: "cream", name: "クリーム", color: "#f8efd9" },
+                  ].map((choice) => (
+                    <button
+                      key={choice.key}
+                      aria-pressed={room === choice.key}
+                      onClick={() => {
+                        try {
+                          localStorage.setItem("piarepo-room", choice.key);
+                          setRoom(choice.key);
+                          setRoomError("");
+                        } catch {
+                          setRoomError(
+                            "色を保存できませんでした。ブラウザの保存設定を確認してください。",
+                          );
+                        }
+                      }}
+                    >
+                      <span style={{ background: choice.color }} />
+                      {choice.name}
+                      {room === choice.key && <Check size={16} />}
+                    </button>
+                  ))}
+                </div>
+                <p className="planner-hint">
+                  このブラウザに保存されます。着せ替えやコインでの購入は準備中です。
+                </p>
+                {roomError && <p role="alert">{roomError}</p>}
+              </>
+            )}
+          </section>
+        </div>
+      )}
       {page === "ホーム" && (
         <section className="home-scene">
           <button
@@ -285,12 +390,41 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
             aria-label="マイページを開く"
             onClick={() => go("マイページ")}
           >
-            <img src="/images/avatar-1.jpg" alt="あなた" />
+            <img src="/images/fig-avatar.png" alt="あなた" />
           </button>
+          <div className="home-toolbar">
+            <button
+              className="home-calendar-tile"
+              onClick={() => go("カレンダー")}
+              aria-label="今日のカレンダーを開く"
+            >
+              <span>{clock.getMonth() + 1}月</span>
+              <b>{clock.getDate()}</b>
+            </button>
+            <button
+              className="home-wallet"
+              onClick={() => setBonusOpen(true)}
+              aria-label="ログインボーナスを開く"
+            >
+              <Coins size={22} />
+              <b>
+                {bonus.status
+                  ? bonus.status.total.toLocaleString("ja-JP")
+                  : "—"}
+              </b>
+              <span>コイン</span>
+            </button>
+            <button
+              className="home-room-button"
+              onClick={() => setRoomOpen(true)}
+              aria-label="お部屋の色を変更"
+            >
+              <Palette size={22} />
+            </button>
+          </div>
           <div className="home-schedule">
-            <LoginBonus compact />
             <div className="home-date">
-              {shortDate(actualDate)}
+              <span>{shortDate(actualDate)}</span>
               <button
                 className="round-add"
                 aria-label="予定を追加"
@@ -300,6 +434,7 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
               </button>
             </div>
             <div className="now-card">
+              <span className="now-label">NOW</span>
               <small>
                 {current ? `${current.start}〜${current.end}` : "いまの予定"}
               </small>
@@ -329,7 +464,7 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
                 )}
             </div>
             <div className="next-card">
-              <span>next</span>
+              <span className="next-label">NEXT</span>
               {next ? (
                 <>
                   <span>
@@ -355,7 +490,11 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
               onClick={() => onNote()}
               aria-label="今の気持ちをnoteに残す"
             >
-              <span>いま、どんな気持ち？</span>
+              <span>
+                ノートを
+                <br />
+                書く
+              </span>
               <span className="thought-face">··</span>
             </button>
             <Character />
@@ -363,7 +502,7 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
               className="primary home-note-button"
               onClick={() => onNote()}
             >
-              気持ちを記録する
+              ノートを書く
             </button>
           </div>
         </section>
@@ -611,18 +750,42 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
                   </span>
                   {modal.id && (
                     <div className="planner-task-actions">
-                      <button type="button" onClick={() => {
-                        if (persist({ ...data, tasks: data.tasks.map(t => t.id === modal.id ? { ...t, done: !t.done } : t) })) setModal(null);
-                      }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (
+                            persist({
+                              ...data,
+                              tasks: data.tasks.map((t) =>
+                                t.id === modal.id ? { ...t, done: !t.done } : t,
+                              ),
+                            })
+                          )
+                            setModal(null);
+                        }}
+                      >
                         <Check size={17} />
-                        {data.tasks.find(t => t.id === modal.id)?.done ? "未完了に戻す" : "完了にする"}
+                        {data.tasks.find((t) => t.id === modal.id)?.done
+                          ? "未完了に戻す"
+                          : "完了にする"}
                       </button>
-                      {!data.tasks.find(t => t.id === modal.id)?.done && (
-                        <button type="button" onClick={() => openEvent(null, data.tasks.find(t => t.id === modal.id))}>
-                          <CalendarDays size={17} />予定に入れる
+                      {!data.tasks.find((t) => t.id === modal.id)?.done && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            openEvent(
+                              null,
+                              data.tasks.find((t) => t.id === modal.id),
+                            )
+                          }
+                        >
+                          <CalendarDays size={17} />
+                          予定に入れる
                         </button>
                       )}
-                      <p className="planner-hint">完了しても、すでに作成した予定は残ります。これらの操作では編集中の変更は保存されません。</p>
+                      <p className="planner-hint">
+                        完了しても、すでに作成した予定は残ります。これらの操作では編集中の変更は保存されません。
+                      </p>
                     </div>
                   )}
                 </>
@@ -670,18 +833,25 @@ export default function PlanningViews({ page, go, data, onChange, onNote }) {
                 保存
               </button>
             </form>
-            {modal.type === "event" && modal.id && (() => {
-              const saved = data.events.find(event => event.id === modal.id);
-              const url = saved && googleCalendarUrl(saved);
-              return url ? (
-                <div className="google-calendar-export">
-                  <a href={url} target="_blank" rel="noopener noreferrer">
-                    <CalendarDays size={18} />Googleカレンダーに追加
-                  </a>
-                  <p className="planner-hint">保存済みの予定を日本時間で開きます。変更した場合は先に保存してください。Googleの画面で「保存」すると追加されます。自動同期はせず、繰り返し追加すると重複する場合があります。</p>
-                </div>
-              ) : null;
-            })()}
+            {modal.type === "event" &&
+              modal.id &&
+              (() => {
+                const saved = data.events.find(
+                  (event) => event.id === modal.id,
+                );
+                const url = saved && googleCalendarUrl(saved);
+                return url ? (
+                  <div className="google-calendar-export">
+                    <a href={url} target="_blank" rel="noopener noreferrer">
+                      <CalendarDays size={18} />
+                      Googleカレンダーに追加
+                    </a>
+                    <p className="planner-hint">
+                      保存済みの予定を日本時間で開きます。変更した場合は先に保存してください。Googleの画面で「保存」すると追加されます。自動同期はせず、繰り返し追加すると重複する場合があります。
+                    </p>
+                  </div>
+                ) : null;
+              })()}
           </section>
         </div>
       )}

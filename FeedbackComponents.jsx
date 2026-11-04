@@ -21,7 +21,8 @@ export const extraStampOptions = [
 
 export function StampReactions({ note, onReact, children }) {
   const [expanded, setExpanded] = useState(false);
-  const counts = getStamps(note), mine = getMyStamps(note);
+  const counts = getStamps(note),
+    mine = getMyStamps(note);
   const button = (stamp, picker = false) => (
     <button
       type="button"
@@ -32,29 +33,48 @@ export function StampReactions({ note, onReact, children }) {
       className={`stamp ${mine[stamp.key] ? "selected-stamp" : ""} ${picker ? "picker-stamp" : ""}`}
       onClick={() => onReact(note, stamp.key)}
     >
-      <span className="stamp-emoji" aria-hidden="true">{stamp.emoji}</span>
+      <span className="stamp-emoji" aria-hidden="true">
+        {stamp.emoji}
+      </span>
       <span>{counts[stamp.key] || 0}</span>
       <span className="stamp-label">{stamp.label}</span>
     </button>
   );
   return (
-    <div className="reactions stamp-reactions" onClick={e => e.stopPropagation()} onKeyDown={e => {
-      if (e.key === "Escape" && expanded) {
-        e.stopPropagation();
-        setExpanded(false);
-        e.currentTarget.querySelector('.stamp-more')?.focus();
-      }
-    }}>
-      {stampOptions.map(stamp => button(stamp))}
-      {!expanded && extraStampOptions.filter(stamp => counts[stamp.key] > 0 || mine[stamp.key]).map(stamp => button(stamp))}
-      <button type="button" className="stamp-more" aria-label={expanded ? "追加スタンプを閉じる" : "もっとスタンプを選ぶ"} aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+    <div
+      className="reactions stamp-reactions"
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => {
+        if (e.key === "Escape" && expanded) {
+          e.stopPropagation();
+          setExpanded(false);
+          e.currentTarget.querySelector(".stamp-more")?.focus();
+        }
+      }}
+    >
+      {stampOptions.map((stamp) => button(stamp))}
+      {!expanded &&
+        extraStampOptions
+          .filter((stamp) => counts[stamp.key] > 0 || mine[stamp.key])
+          .map((stamp) => button(stamp))}
+      <button
+        type="button"
+        className="stamp-more"
+        aria-label={expanded ? "追加スタンプを閉じる" : "もっとスタンプを選ぶ"}
+        aria-expanded={expanded}
+        onClick={() => setExpanded(!expanded)}
+      >
         {expanded ? <X size={19} /> : <Plus size={19} />}
       </button>
       {children}
       {expanded && (
-        <div className="extra-stamp-picker" role="group" aria-label="追加スタンプ">
+        <div
+          className="extra-stamp-picker"
+          role="group"
+          aria-label="追加スタンプ"
+        >
           <p>気持ちに合うスタンプを選んでね。もう一度押すと取り消せます。</p>
-          <div>{extraStampOptions.map(stamp => button(stamp, true))}</div>
+          <div>{extraStampOptions.map((stamp) => button(stamp, true))}</div>
         </div>
       )}
     </div>
@@ -134,9 +154,24 @@ export function Comments({ comments, value, onValue, onSubmit }) {
         {comments.length ? (
           comments.map((c, i) => (
             <div className="comment" key={i}>
-              <small>
-                {typeof c === "string" ? "広場から" : c.author || "広場から"}
-              </small>
+              <div className="comment-author">
+                <img src="/images/fig-avatar.png" alt="" />
+                <b>
+                  {typeof c === "string" ? "広場から" : c.author || "広場から"}
+                </b>
+                {typeof c !== "string" &&
+                  c.createdAt &&
+                  Number.isFinite(Date.parse(c.createdAt)) && (
+                    <time dateTime={c.createdAt}>
+                      {new Date(c.createdAt).toLocaleString("ja-JP", {
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </time>
+                  )}
+              </div>
               <p>{typeof c === "string" ? c : c.text}</p>
             </div>
           ))
@@ -149,7 +184,7 @@ export function Comments({ comments, value, onValue, onSubmit }) {
         <div className="comment-form">
           <input
             id="comment-input"
-            placeholder="やさしい言葉を届けよう"
+            placeholder="やさしいコメントを送りましょう"
             value={value}
             onChange={(e) => onValue(e.target.value)}
             required

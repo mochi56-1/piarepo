@@ -44,7 +44,14 @@ export function mergeAccountDocuments(current, incoming) {
     ...b.filter((n) => !a.some((x) => x.id === n.id)),
   ];
   return {
-    notes: merge(current.notes, incoming.notes),
+    notes: merge(
+      current.notes,
+      incoming.notes.map((n) => ({
+        ...n,
+        shareToFriends: false,
+        visibility: "private",
+      })),
+    ),
     planner: {
       tasks: merge(current.planner.tasks, incoming.planner.tasks),
       events: merge(current.planner.events, incoming.planner.events),
